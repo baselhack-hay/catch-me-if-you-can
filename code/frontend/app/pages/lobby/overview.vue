@@ -1,13 +1,9 @@
-<script setup>
-
-</script>
+<script setup></script>
 <template>
   <h1>Lobby</h1>
   <table>
     <tr>
-      <th>
-        Nr.
-      </th>
+      <th>Nr.</th>
       <th>Name</th>
     </tr>
     <tr>
@@ -15,7 +11,5 @@
       <td>Marco Fabian</td>
     </tr>
   </table>
-  <button>
-    Start
-  </button>
+  <UiButton> Start </UiButton>
 </template>

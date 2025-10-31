@@ -1,7 +1,7 @@
 <script setup></script>
 <template>
   <h1>Lobby erstellen</h1>
-  <input />
+  <UiInput />
   <NuxtLink to="/lobby/overview">
     <UiButton variant="secondary">erstellen</UiButton>
   </NuxtLink>
