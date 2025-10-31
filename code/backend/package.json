@@ -1,0 +1,16 @@
+{
+  "name": "mqtt-demo",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aedes": "^0.51.3",
+    "ws": "^8.18.3"
+  }
+}
