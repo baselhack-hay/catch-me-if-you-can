@@ -5,7 +5,8 @@
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "start": "npx tsx src/index.ts"
+    "start": "npx tsx src/index.ts",
+    "supa": "npx tsx src/supabase.ts"
   },
   "author": "",
   "license": "ISC",
