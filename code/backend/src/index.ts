@@ -3,7 +3,7 @@ import aedes from "aedes";
 import { createServer as createHttpServer } from "node:http";
 import { WebSocketServer, createWebSocketStream } from "ws";
 
-const broker = aedes();
+const broker = new aedes();
 
 // --- WebSocket for browser/React clients ---
 const httpServer = createHttpServer();
