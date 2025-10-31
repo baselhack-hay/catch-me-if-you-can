@@ -33,9 +33,12 @@ broker.on("client", (client) => {
   // send a demo message when a client connects
   broker.publish(
     {
+      cmd: "publish",
       topic: "server/demo",
       payload: Buffer.from(`Welcome ${client.id}! This is a test message.`),
       qos: 0,
+      retain: false,
+      dup: false,
     },
     (err) => {
       if (err) console.error("Publish error:", err);
