@@ -7,16 +7,21 @@ export const supabase = createClient(
   process.env.SUPABASE_PUBLISHABLE_KEY!
 );
 
-async function testConnection() {
-  console.log("🔌 Testing Supabase connection...");
-          
-  const { data, error } = await supabase.from("test").select("*").limit(1);
+async function testDummyData() {
+  console.log("🧠 Testing dummy data in all tables...");
 
-  if (error) {
-    console.error("❌ Connection or query failed:", error.message);
-  } else {
-    console.log("✅ Connection successful! Example data:", data);
+  const tables = ["User", "Lobby", "User_Lobby", "Feed", "Map"];
+
+  for (const table of tables) {
+    const { data, error } = await supabase.from(table).select("*");
+    if (error) {
+      console.error(`❌ Error in table ${table}:`, error.message);
+    } else {
+      console.log(`✅ ${table}: ${data.length} rows`);
+      console.table(data);
+    }
   }
 }
 
-testConnection();
+testDummyData();
+
