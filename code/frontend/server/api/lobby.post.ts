@@ -1,5 +1,5 @@
 import { serverSupabaseClient } from "#supabase/server";
-import { lobbySchema } from "../../app/types/lobby";
+import { lobbySchema } from "validationTypes/lobby";
 
 export default defineEventHandler(async (event) => {
   const client = await serverSupabaseClient(event);

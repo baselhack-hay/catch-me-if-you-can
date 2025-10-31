@@ -22,5 +22,8 @@ export default defineNuxtConfig({
   },
   alias: {
     types: fileURLToPath(new URL("../types", import.meta.url)),
+    validationTypes: fileURLToPath(
+      new URL("app/types/validation", import.meta.url),
+    ),
   },
 });
