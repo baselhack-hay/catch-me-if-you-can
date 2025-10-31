@@ -1,0 +1,1 @@
+<template>Join Lobby</template>
