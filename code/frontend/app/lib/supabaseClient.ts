@@ -1,3 +1,4 @@
+// ~/lib/supabaseClient.ts
 import { createClient } from "@supabase/supabase-js";
 
 export const supabaseClient = createClient(
@@ -15,4 +16,18 @@ export async function getLobbies() {
     console.error("Error fetching lobbies:", error);
     return [];
   }
-  return lobbies;}
+  return lobbies;
+}
+
+export async function getAllLocationsFromAllUsers() {
+  const { data: users, error } = await supabaseClient
+    .from("users")
+    .select("*");
+
+  if (error) {
+    console.error("Error fetching users:", error);
+    return [];
+  }
+
+  return users;
+}

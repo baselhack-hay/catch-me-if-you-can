@@ -2,10 +2,14 @@
 import { ref, onMounted } from "vue";
 
 const lobbies = ref([]);
+const userLocations = ref([]);
 
 onMounted(async () => {
   const res = await $fetch("/api/lobby");
   lobbies.value = Array.isArray(res) ? res : [];
+
+  const userRes = await $fetch("/api/location");
+  userLocations.value = Array.isArray(userRes) ? userRes : [];
 });
 </script>
 
@@ -16,7 +20,7 @@ onMounted(async () => {
     <NuxtLink to="/lobby/join"
       ><UiButton variant="default">Join Lobby</UiButton></NuxtLink
     >
-    <NuxtLink to="/lobby/create"
+        <NuxtLink to="/lobby/create"
       ><UiButton variant="secondary">Create Lobby</UiButton></NuxtLink
     >
     <NuxtLink to="lobby/map"
@@ -24,10 +28,17 @@ onMounted(async () => {
     >
 
     <h2>Verfügbare Lobbies</h2>
-    <ul>
-      <li v-for="lobby in lobbies" :key="lobby.id">
-        {{ lobby.id }}
-      </li>
-    </ul>
+      <ul>
+        <li 
+          v-for="location in userLocations" 
+          :key="location.id"
+          :class="!location.geolocation ? 'opacity-50 text-gray-400' : ''"
+        >
+        <span v-if="location.geolocation">
+          {{ location.id }} + {{ location.username }} - {{ location.geolocation }}
+          </span>
+
+        </li>
+      </ul>
   </div>
 </template>
