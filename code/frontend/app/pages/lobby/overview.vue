@@ -2,7 +2,7 @@
 const lobbyStore = useLobbyStore();
 
 onMounted(() => {
-  console.log("current users: ", lobbyStore.users);
+  lobbyStore.retrieveFromSessionStorage();
 });
 
 async function onStartGame(): Promise<void> {

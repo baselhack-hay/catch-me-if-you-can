@@ -1,5 +1,12 @@
-<script lang="ts">
+<script setup lang="ts">
 import "./globals.css";
+
+const lobbyStore = useLobbyStore();
+
+onUnmounted(async () => {
+  console.log("disconecting mqtt client...");
+  await lobbyStore.disconnectMqttClient();
+});
 </script>
 
 <template>

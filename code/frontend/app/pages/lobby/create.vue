@@ -5,8 +5,7 @@ const nickname = useState<string>();
 const lobbyStore = useLobbyStore();
 
 async function onCreateLobby(): Promise<void> {
-  const result = await lobbyStore.createLobby(lobbyName.value, nickname.value);
-  return Promise.resolve();
+  await lobbyStore.createLobby(lobbyName.value, nickname.value);
 }
 </script>
 <template>
