@@ -1,12 +1,11 @@
-<!-- eslint-disable vue/no-multiple-template-root -->
-<!-- eslint-disable vue/html-self-closing -->
-<!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from "vue";
+import { ref, onMounted, onBeforeUnmount, nextTick } from "vue";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 const map = ref<L.Map | null>(null);
+const lobbyStore = useLobbyStore();
+let geoInterval: ReturnType<typeof setInterval> | null = null;
 
 onMounted(async () => {
   await nextTick();
@@ -15,6 +14,7 @@ onMounted(async () => {
     (pos) => {
       const { latitude, longitude } = pos.coords;
 
+      // 🌍 Karte initialisieren
       map.value = L.map("map").setView([latitude, longitude], 13);
 
       // 🌙 Darkmode Tiles
@@ -28,7 +28,7 @@ onMounted(async () => {
         }
       ).addTo(map.value as L.Map);
 
-      // 📍 Custom Marker-Icons definieren
+      // 📍 Custom Marker
       const trianglePurple = L.divIcon({
         html: `
           <div style="
@@ -45,54 +45,19 @@ onMounted(async () => {
         iconAnchor: [12, 24],
       });
 
-      const triangleRed = L.divIcon({
-        html: `
-          <div style="
-            width: 0;
-            height: 0;
-            border-left: 12px solid transparent;
-            border-right: 12px solid transparent;
-            border-bottom: 24px solid #EF4444;
-            border-radius: 2px;
-          "></div>
-        `,
-        className: "",
-        iconSize: [24, 24],
-        iconAnchor: [12, 24],
-      });
-
-      const circleGreen = L.divIcon({
-        html: `
-          <div style="
-            width: 24px;
-            height: 24px;
-            background: #22C55E;
-            border-radius: 50%;
-          "></div>
-        `,
-        className: "",
-        iconSize: [24, 24],
-        iconAnchor: [12, 12],
-      });
-
-      // ➕ Marker hinzufügen
       L.marker([latitude, longitude], { icon: trianglePurple })
         .addTo(map.value as L.Map)
-        .bindPopup("🟣 Du bist hier");
+        .bindPopup("🟣 Du bist hier")
+        .openPopup();
 
-      L.marker([latitude + 0.005, longitude + 0.01], { icon: triangleRed })
-        .addTo(map.value as L.Map)
-        .bindPopup("🔺 Gegner");
-
-      L.marker([latitude - 0.007, longitude - 0.012], { icon: circleGreen })
-        .addTo(map.value as L.Map)
-        .bindPopup("🟢 Zielpunkt");
+      // ⏱️ Alle 1 Sekunden automatisch senden
+      geoInterval = setInterval(sendGeolocation, 1_000);
+      sendGeolocation(); // einmal sofort triggern
     },
     () => {
-      // 📍 Fallback: Basel
+      // 📍 Fallback Basel
       const basel: [number, number] = [47.5596, 7.5886];
       map.value = L.map("map").setView(basel, 13);
-
       L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
         {
@@ -101,86 +66,32 @@ onMounted(async () => {
           subdomains: "abcd",
         }
       ).addTo(map.value as L.Map);
-
-      // gleiche Marker auch im Fallback
-      const trianglePurple = L.divIcon({
-        html: `
-          <div style="
-            width: 0;
-            height: 0;
-            border-left: 12px solid transparent;
-            border-right: 12px solid transparent;
-            border-bottom: 24px solid #8B5CF6;
-            border-radius: 2px;
-          "></div>
-        `,
-        className: "",
-        iconSize: [24, 24],
-        iconAnchor: [12, 24],
-      });
-
-      const triangleRed = L.divIcon({
-        html: `
-          <div style="
-            width: 0;
-            height: 0;
-            border-left: 12px solid transparent;
-            border-right: 12px solid transparent;
-            border-bottom: 24px solid #EF4444;
-            border-radius: 12px 12px 0 0;
-          "></div>
-        `,
-        className: "",
-        iconSize: [24, 24],
-        iconAnchor: [12, 24],
-      });
-
-      const circleGreen = L.divIcon({
-        html: `
-          <div style="
-            width: 24px;
-            height: 24px;
-            background: #22C55E;
-            border-radius: 50%;
-          "></div>
-        `,
-        className: "",
-        iconSize: [24, 24],
-        iconAnchor: [12, 12],
-      });
-
-      // Marker für Basel-Position
-      L.marker(basel, { icon: trianglePurple })
+      L.marker(basel)
         .addTo(map.value as L.Map)
         .bindPopup("📍 Basel (Fallback)");
-
-      L.marker([47.565, 7.59], { icon: triangleRed })
-        .addTo(map.value as L.Map)
-        .bindPopup("🔺 Gegner (Fallback)");
-
-      L.marker([47.554, 7.58], { icon: circleGreen })
-        .addTo(map.value as L.Map)
-        .bindPopup("🟢 Zielpunkt (Fallback)");
     }
   );
 });
 
-const lobbyStore = useLobbyStore();
-
-onMounted(() => {
-  console.log("current users: ", lobbyStore.users);
+onBeforeUnmount(() => {
+  if (geoInterval) clearInterval(geoInterval);
 });
 
 async function sendGeolocation(): Promise<void> {
-  lobbyStore.joinLobby("VUT-XLF", "mqttjs_f6a8f929")
-  lobbyStore.sendGeolocation({ latitude: 45, longitude: 7 });
+  if (!navigator.geolocation) return;
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const { latitude, longitude } = pos.coords;
+      console.log("📍 Sende Geolocation:", latitude, longitude);
+      lobbyStore.sendGeolocation({ latitude, longitude });
+    },
+    (err) => console.warn("Geolocation-Fehler:", err),
+  );
 }
 </script>
 
 <template>
-  <div>
-    <ui-button @click="sendGeolocation()"> Send Geolocation </ui-button>
-  </div>
   <div id="map" class="w-full h-[100vh]"></div>
 </template>
 
