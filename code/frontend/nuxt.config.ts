@@ -11,7 +11,7 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@nuxt/ui",
     "shadcn-nuxt",
-    "@nuxtjs/supabase",
+    // "@nuxtjs/supabase",
   ],
   vite: {
     plugins: [tailwindcss()],
