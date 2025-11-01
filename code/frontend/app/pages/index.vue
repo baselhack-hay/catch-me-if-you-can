@@ -10,10 +10,14 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div>
+  <div class="flex flex-col items-center gap-4">
     <h1>Catch me if you can</h1>
-    <NuxtLink to="/lobby/create"><UiButton>Lobby erstellen</UiButton></NuxtLink>
-    <NuxtLink to="/lobby/join"><UiButton>Lobby beitreten</UiButton></NuxtLink>
+    <NuxtLink to="/lobby/join"
+      ><UiButton variant="default">Lobby beitreten</UiButton></NuxtLink
+    >
+    <NuxtLink to="/lobby/create"
+      ><UiButton variant="secondary">Lobby erstellen</UiButton></NuxtLink
+    >
 
     <h2>Verfügbare Lobbies</h2>
     <ul>
