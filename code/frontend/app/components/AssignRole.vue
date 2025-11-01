@@ -2,18 +2,19 @@
   <div
     class="relative h-[calc(100vh-80px)] justify-between flex flex-col items-center gap-6"
   >
-    <div class="flex flex-col items-center justify-between">
-      <UiTitle class="uppercase text-7xl">You</UiTitle>
-      <UiTitle class="uppercase text-7xl">are</UiTitle>
+    <div class="flex flex-col items-center justify-between h-3/4">
+      <div>
+        <UiTitle class="uppercase text-7xl">You</UiTitle>
+        <UiTitle class="uppercase text-7xl">are</UiTitle>
+      </div>
 
       <div class="relative w-40 h-40 flex items-center justify-center">
         <div
           v-if="props.variant === 'bunny'"
           class="absolute w-36 h-36 bg-(--color-cookies-and-cream) rounded-full"
         />
-
         <div
-          v-else-if="props.variant === 'hunter'"
+          v-else
           class="absolute w-0 h-0"
           style="
             border-left: 5rem solid transparent;
@@ -22,6 +23,7 @@
           "
         />
 
+        <!-- image -->
         <img
           v-if="props.variant === 'bunny'"
           src="/img/bunny_alt.png"
@@ -36,8 +38,19 @@
         />
       </div>
 
-      <UiTitle class="mt-3 uppercase text-7xl">{{ variantLabel }}</UiTitle>
+      <UiTitle
+        class="mt-3 uppercase text-7xl"
+        :style="{
+          color:
+            props.variant === 'hunter'
+              ? 'var(--color-chinese-black)'
+              : 'var(--color-cookies-and-cream)',
+        }"
+      >
+        {{ variantLabel }}
+      </UiTitle>
     </div>
+
     <div class="mb-5">
       <Button @click="confirmReady()">Ready?</Button>
     </div>
