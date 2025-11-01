@@ -2,13 +2,16 @@ import mqtt from "mqtt";
 import type { LobbyUser } from "types/lobby";
 import { TOPICS } from "types/topics";
 
-export function joinChannel(lobbyCode: string): mqtt.MqttClient | null {
+export function joinChannel(
+  lobbyCode: string,
+  nickname: string,
+): mqtt.MqttClient | null {
   const config = useRuntimeConfig();
   const lobbyStore = useLobbyStore();
 
   try {
     const client = mqtt.connect(config.public.mqttUrl, {
-      clientId: "hello-client",
+      clientId: nickname,
     });
     client.on("connect", () => {
       client
@@ -21,16 +24,21 @@ export function joinChannel(lobbyCode: string): mqtt.MqttClient | null {
                 lobbyStore.handleJoinEvent(
                   JSON.parse(payload.toString()) as unknown as LobbyUser,
                 );
+                break;
               case "leave":
                 lobbyStore.handleLeaveEvent();
+                break;
               case "users":
                 lobbyStore.handleUsersEvent(
                   JSON.parse(payload.toString()) as unknown as LobbyUser[],
                 );
+                break;
               case "start":
                 lobbyStore.handleStartEvent();
+                break;
               case "started":
                 lobbyStore.handleStartedEvent();
+                break;
               default:
                 break;
             }
@@ -39,7 +47,7 @@ export function joinChannel(lobbyCode: string): mqtt.MqttClient | null {
       client.publish(
         TOPICS.LOBBY.JOIN(lobbyCode),
         JSON.stringify({
-          username: "tung tung tung sahur",
+          username: nickname,
         }),
       );
     });

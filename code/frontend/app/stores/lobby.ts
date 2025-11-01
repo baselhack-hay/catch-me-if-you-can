@@ -17,12 +17,12 @@ export const useLobbyStore = defineStore("lobbyStore", {
       users: [],
     }) as LobbyStore,
   actions: {
-    async joinLobby(lobbyCode: string): Promise<boolean> {
+    async joinLobby(lobbyCode: string, nickname: string): Promise<boolean> {
       try {
         const result = await getLobbyById(lobbyCode);
         if (result.exists) {
           this.code = lobbyCode;
-          this.client = joinChannel(lobbyCode);
+          this.client = joinChannel(lobbyCode, nickname);
           return Promise.resolve(true);
         } else {
           throw new Error("failed to join lobby");
@@ -59,6 +59,7 @@ export const useLobbyStore = defineStore("lobbyStore", {
     async handleStartEvent(): Promise<void> {},
 
     async handleStartedEvent(): Promise<void> {
+      console.log("handle started event... navigating to map");
       navigateTo("/game");
     },
   },
