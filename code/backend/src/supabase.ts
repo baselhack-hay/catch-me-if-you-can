@@ -17,19 +17,21 @@ export async function testDummyData() {
   return results;
 }
 
-export async function addUser(username: string, points: number = 0) {
-  const res = await supabase
+export async function addUser(id: string, username: string) {
+  if (!username || username.trim().length === 0) {
+    throw new Error("username is required");
+  }
+
+  const { data, error } = await supabase
     .from("users")
-    .insert([{ username, points }])
+    .upsert([{ id, username: username.trim() }])
     .select();
-  return res;
+  console.log(error);
+  return data;
 }
 
 export async function createLobby(name: string, hostUserId?: number) {
-  const res = await supabase
-    .from("lobby")
-    .insert([{ name }])
-    .select();
+  const res = await supabase.from("lobby").insert([{ name }]).select();
   return res;
 }
 
@@ -72,7 +74,11 @@ export async function addPointsToUserInLobby(
   }
 
   // update total points on users table
-  const userRow = await supabase.from("users").select("points").eq("id", userId).maybeSingle();
+  const userRow = await supabase
+    .from("users")
+    .select("points")
+    .eq("id", userId)
+    .maybeSingle();
   const current = userRow.data?.points ?? 0;
   const updatedTotal = current + points;
   const userUpd = await supabase
@@ -126,7 +132,11 @@ export async function deleteMap(mapId: number) {
   return res;
 }
 
-export async function addFeed(lobbyId: number, userId: number, content: string) {
+export async function addFeed(
+  lobbyId: number,
+  userId: number,
+  content: string
+) {
   const res = await supabase
     .from("feeds")
     .insert([{ lobby_id: lobbyId, user_id: userId, content }])
@@ -144,7 +154,10 @@ export async function getFeedsForLobby(lobbyId: number, limit: number = 50) {
   return res;
 }
 
-export async function setLobbySettings(lobbyId: number, settings: Record<string, any>) {
+export async function setLobbySettings(
+  lobbyId: number,
+  settings: Record<string, any>
+) {
   // upsert settings row keyed by lobby_id
   const res = await supabase
     .from("settings")
@@ -162,7 +175,11 @@ export async function getLobbySettings(lobbyId: number) {
   return res;
 }
 
-export async function setRoleForUserInLobby(userId: number, lobbyId: number, role: string) {
+export async function setRoleForUserInLobby(
+  userId: number,
+  lobbyId: number,
+  role: string
+) {
   // find the lobby_user row first
   const lu = await supabase
     .from("lobby_user")
@@ -176,7 +193,9 @@ export async function setRoleForUserInLobby(userId: number, lobbyId: number, rol
 
   const res = await supabase
     .from("roles")
-    .upsert([{ lobby_user_id: lu.data.id, role }], { onConflict: "lobby_user_id" })
+    .upsert([{ lobby_user_id: lu.data.id, role }], {
+      onConflict: "lobby_user_id",
+    })
     .select();
   return res;
 }
@@ -210,14 +229,26 @@ export async function getUsersWithRolesInLobby(lobbyId: number) {
 }
 
 export async function getLobbyById(lobbyId: number) {
-  return await supabase.from("lobby").select("*").eq("id", lobbyId).maybeSingle();
+  return await supabase
+    .from("lobby")
+    .select("*")
+    .eq("id", lobbyId)
+    .maybeSingle();
 }
 
 export async function getUserById(userId: number) {
-  return await supabase.from("users").select("*").eq("id", userId).maybeSingle();
+  return await supabase
+    .from("users")
+    .select("*")
+    .eq("id", userId)
+    .maybeSingle();
 }
 
-export async function listLobbies(limit: number = 50, offset: number = 0, ascending: boolean = true) {
+export async function listLobbies(
+  limit: number = 50,
+  offset: number = 0,
+  ascending: boolean = true
+) {
   // uses range for pagination
   const start = offset;
   const end = offset + limit - 1;
@@ -257,11 +288,23 @@ export async function searchUsersByUsername(query: string, limit: number = 20) {
     .limit(limit);
 }
 
-export async function transferPointsBetweenUsers(fromUserId: number, toUserId: number, amount: number) {
+export async function transferPointsBetweenUsers(
+  fromUserId: number,
+  toUserId: number,
+  amount: number
+) {
   if (amount <= 0) return { error: "amount must be positive" };
 
-  const fromRow = await supabase.from("users").select("points").eq("id", fromUserId).maybeSingle();
-  const toRow = await supabase.from("users").select("points").eq("id", toUserId).maybeSingle();
+  const fromRow = await supabase
+    .from("users")
+    .select("points")
+    .eq("id", fromUserId)
+    .maybeSingle();
+  const toRow = await supabase
+    .from("users")
+    .select("points")
+    .eq("id", toUserId)
+    .maybeSingle();
 
   const fromPoints = fromRow.data?.points ?? 0;
   const toPoints = toRow.data?.points ?? 0;
@@ -283,7 +326,10 @@ export async function transferPointsBetweenUsers(fromUserId: number, toUserId: n
   return { from: updFrom, to: updTo };
 }
 
-export async function removeRoleForUserInLobby(userId: number, lobbyId: number) {
+export async function removeRoleForUserInLobby(
+  userId: number,
+  lobbyId: number
+) {
   const lu = await supabase
     .from("lobby_user")
     .select("id")
@@ -292,7 +338,11 @@ export async function removeRoleForUserInLobby(userId: number, lobbyId: number) 
 
   if (!lu.data) return { error: "lobby_user not found", status: 404 };
 
-  return await supabase.from("roles").delete().eq("lobby_user_id", lu.data.id).select();
+  return await supabase
+    .from("roles")
+    .delete()
+    .eq("lobby_user_id", lu.data.id)
+    .select();
 }
 
 export async function getMapById(mapId: number) {
@@ -313,11 +363,18 @@ export async function clearFeedsForLobby(lobbyId: number) {
 }
 
 export async function updateUserName(userId: number, username: string) {
-  return await supabase.from("users").update({ username }).eq("id", userId).select();
+  return await supabase
+    .from("users")
+    .update({ username })
+    .eq("id", userId)
+    .select();
 }
 
 export async function getLobbyMemberCount(lobbyId: number) {
-  const res: any = await supabase.from("lobby_user").select("id", { count: "exact", head: false }).eq("lobby_id", lobbyId);
+  const res: any = await supabase
+    .from("lobby_user")
+    .select("id", { count: "exact", head: false })
+    .eq("lobby_id", lobbyId);
   // res.count contains the exact count when available
   return { count: res.count ?? null, result: res };
 }

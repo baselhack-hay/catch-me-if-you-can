@@ -1,5 +1,5 @@
 export type Lobby = {
-  id?: number;
+  id?: string;
   status: string;
   settings: LobbySettings;
 };

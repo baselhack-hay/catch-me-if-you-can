@@ -2,11 +2,10 @@
 import { z } from "zod";
 
 export const lobbySettingsSchema = z.object({
-    id: z.string()
+  id: z.string(),
 });
 
 export const lobbySchema = z.object({
-    id: z.number().optional(),
-    status: z.string(),
-    settings: lobbySettingsSchema
+  id: z.string().optional(),
+  settings: lobbySettingsSchema,
 });
