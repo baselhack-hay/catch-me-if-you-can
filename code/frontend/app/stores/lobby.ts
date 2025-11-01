@@ -1,4 +1,4 @@
-import { getLobbyById } from "~/utils/lobby-service";
+import { getLobbyById } from "~/utils/lobby";
 
 export type LobbyStore = {
   code: string;
