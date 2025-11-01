@@ -3,7 +3,7 @@ import "./globals.css";
 </script>
 
 <template>
-  <div class="font-joti relative gradient-base gradient min-h-screen">
+  <div class="font-joti relative gradient-base gradient min-h-screen border-8 border-(--color-chinese-black)">
     <NuxtPage class="flex flex-col items-center gap-4 pt-20" />
   </div>
 </template>

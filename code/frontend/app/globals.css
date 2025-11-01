@@ -45,7 +45,7 @@
 }
 
 :root {
-  --noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.4' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  --noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.4' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   --joti: "Joti One", sans-serif;
   --color-chinese-black: #0c1426;
   --color-cookies-and-cream: #f0dbab;
@@ -175,10 +175,9 @@
   background-color: var(--color-chinese-black);
 }
 
-/* .gradient::before {
-  background: linear-gradient(transparent 25%, var(--color-orange) 100%);
+.gradient::before {
   pointer-events: none;
-} */
+}
 
 /* .noise {
   height: 100vh;
