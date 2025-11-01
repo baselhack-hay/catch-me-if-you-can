@@ -11,12 +11,8 @@ onMounted(async () => {
 
 <template>
   <div class="flex flex-col items-center gap-4 pt-20">
-    <h1 class="text-5xl font-bold text-(--color-cookies-and-cream)">
-      Catch me
-    </h1>
-    <h1 class="text-5xl font-bold text-(--color-cookies-and-cream) mb-20">
-      if you can
-    </h1>
+    <UiTitle> Catch me </UiTitle>
+    <UiTitle class="mb-20"> if you can </UiTitle>
     <NuxtLink to="/lobby/join"
       ><UiButton variant="default">Join Lobby</UiButton></NuxtLink
     >
