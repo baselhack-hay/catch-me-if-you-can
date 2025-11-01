@@ -37,6 +37,18 @@ export async function createLobby(name: string, hostUserId?: number) {
 }
 
 export async function joinLobby(userId: string, lobbyId: string) {
+  const res = await supabase
+    .from("lobby_users")
+    .select("*", { count: "exact" })
+    .eq("lobby_id", lobbyId);
+
+  // Assign bunny or hunter alternating
+  const roleId = res.count
+    ? res.count % 2 === 0
+      ? "08182765-80e1-45fd-ac2f-201986b30de1"
+      : "37ee07b1-1cf8-4efb-aa42-ca03d2681cf8"
+    : "37ee07b1-1cf8-4efb-aa42-ca03d2681cf8";
+
   const { data, error } = await supabase
     .from("lobby_users")
     .upsert(
@@ -44,7 +56,7 @@ export async function joinLobby(userId: string, lobbyId: string) {
         {
           user_id: userId,
           lobby_id: lobbyId,
-          role_id: "37ee07b1-1cf8-4efb-aa42-ca03d2681cf8",
+          role_id: roleId,
         },
       ],
       {

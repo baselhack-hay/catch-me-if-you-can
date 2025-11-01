@@ -88,6 +88,7 @@ export const useLobbyStore = defineStore("lobbyStore", {
         TOPICS.LOBBY.LEAVE(this.code),
         JSON.stringify({ lobbyCode: this.code }),
       );
+      console.log("leave");
       this.client?.end();
       navigateTo("/");
     },
