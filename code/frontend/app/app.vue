@@ -7,3 +7,10 @@ import "./globals.css";
     <NuxtPage />
   </div>
 </template>
+
+<style scoped>
+.gradient::before {
+  background: linear-gradient(transparent 25%, var(--color-orange) 100%);
+  pointer-events: none;
+}
+</style>

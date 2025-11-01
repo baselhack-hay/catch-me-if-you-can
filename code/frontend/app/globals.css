@@ -175,9 +175,10 @@
   background-color: var(--color-chinese-black);
 }
 
-.gradient::before {
+/* .gradient::before {
   background: linear-gradient(transparent 25%, var(--color-orange) 100%);
-}
+  pointer-events: none;
+} */
 
 /* .noise {
   height: 100vh;
