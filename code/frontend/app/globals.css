@@ -168,6 +168,7 @@
   height: 100%;
   width: 100%;
   mask: var(--noise), linear-gradient(transparent 5%, #000 100%);
+  pointer-events: none;
 }
 
 .gradient {
