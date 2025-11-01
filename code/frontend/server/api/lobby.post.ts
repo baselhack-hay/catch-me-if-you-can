@@ -11,10 +11,11 @@ export default defineEventHandler(async (event) => {
     const { data, error } = await supabaseClient
       .from("lobbies")
       .insert({ ...validatedLobby, id: lobbyCode })
-      .select();
+      .select()
+      .single();
     console.log(data, error);
     setResponseStatus(event, 201);
-    return JSON.stringify(data);
+    return data;
   } catch (e) {
     console.error(e);
   }

@@ -1,7 +1,7 @@
 import type { MqttClient } from "mqtt";
 import type { LobbyUser } from "types/lobby";
 import { TOPICS } from "types/topics";
-import { getLobbyById } from "~/utils/lobby";
+import { getLobbyById, postLobby } from "~/utils/lobby";
 
 export type LobbyStore = {
   code: string;
@@ -17,6 +17,23 @@ export const useLobbyStore = defineStore("lobbyStore", {
       users: [],
     } as LobbyStore),
   actions: {
+    async createLobby(lobbyname: string, nickname: string): Promise<void> {
+      const result = await postLobby({
+        id: lobbyname,
+      });
+
+      if (result.id) {
+        try {
+          const joinResult = await this.joinLobby(result.id, nickname);
+          if (joinResult) {
+            navigateTo("/lobby/overview");
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    },
+
     async joinLobby(lobbyCode: string, nickname: string): Promise<boolean> {
       try {
         const result = await getLobbyById(lobbyCode);
