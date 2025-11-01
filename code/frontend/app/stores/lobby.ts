@@ -62,5 +62,19 @@ export const useLobbyStore = defineStore("lobbyStore", {
       console.log("handle started event... navigating to map");
       navigateTo("/game");
     },
+
+    async sendGeolocation(geo: Geolocation): Promise<void> {
+      if (!this.code || !this.client) {
+        console.warn("Cannot send geolocation without lobby connection");
+        return;
+      }
+
+      this.client.publish(
+        TOPICS.LOBBY.GEOLOCATION(this.code),
+        JSON.stringify(geo),
+      );
+    },
   },
 });
+
+
