@@ -12,7 +12,7 @@ export async function getLobbies() {
     .order("created_at", { ascending: false });
 
   if (error) {
-    throw new Error(`Error fetching lobbies: ${error.message}`);
+    console.error("Error fetching lobbies:", error);
+    return [];
   }
-  return lobbies;
-}
+  return lobbies;}

@@ -4,8 +4,8 @@ import { ref, onMounted } from 'vue'
 const lobbies = ref([])
 
 onMounted(async () => {
-  const res = await $fetch('/api/lobby')
-  lobbies.value = res
+    const res = await $fetch('/api/lobby')
+    lobbies.value = Array.isArray(res) ? res : []
 })
 </script>
 
@@ -18,7 +18,7 @@ onMounted(async () => {
     <h2>Verfügbare Lobbies</h2>
     <ul>
       <li v-for="lobby in lobbies" :key="lobby.id">
-        {{ lobby.name }}
+      {{ lobby.id }}
       </li>
     </ul>
   </div>
