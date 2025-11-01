@@ -151,6 +151,20 @@ export async function getUsersInLobby(lobbyId: string): Promise<any> {
   return data;
 }
 
+export async function removeUserFromLobby(userId: string) {
+  const { data, error } = await supabase
+    .from("lobby_users")
+    .delete()
+    .eq("user_id", userId);
+
+  if (error) {
+    console.error("❌ removeUserFromLobby error:", error);
+    throw error;
+  }
+
+  return data;
+}
+
 export async function createMap(lobbyId: number, name: string, data: any) {
   const res = await supabase
     .from("maps")

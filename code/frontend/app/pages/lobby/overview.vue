@@ -8,6 +8,10 @@ onMounted(() => {
 async function onStartGame(): Promise<void> {
   lobbyStore.startGame();
 }
+
+async function onLeaveGame(): Promise<void> {
+  lobbyStore.leaveLobby();
+}
 </script>
 
 <template>
@@ -23,5 +27,6 @@ async function onStartGame(): Promise<void> {
     </ol>
 
     <UiButton @click="onStartGame()"> Start </UiButton>
+    <UiButton @click="onLeaveGame()"> Leave </UiButton>
   </div>
 </template>

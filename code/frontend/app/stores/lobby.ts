@@ -77,6 +77,15 @@ export const useLobbyStore = defineStore("lobbyStore", {
       navigateTo("/game");
     },
 
+    async leaveLobby(): Promise<void> {
+      this.client?.publish(
+        TOPICS.LOBBY.LEAVE(this.code),
+        JSON.stringify({ lobbyCode: this.code })
+      );
+      this.client?.end();
+      navigateTo("/");
+    },
+
     async sendGeolocation(): Promise<void> {
       if (!this.code || !this.client) {
         console.warn("Cannot send geolocation without lobby connection");
@@ -88,7 +97,7 @@ export const useLobbyStore = defineStore("lobbyStore", {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           const geo = pos.coords;
-          console.log("📍 Sende Geolocation:", geo.latitude, geo.longitude);
+          console.log("📍 Sending Geolocation:", geo.latitude, geo.longitude);
           this.client?.publish(
             TOPICS.LOBBY.GEOLOCATION(this.code),
             JSON.stringify(geo)

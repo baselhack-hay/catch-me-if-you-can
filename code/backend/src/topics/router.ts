@@ -13,7 +13,13 @@ export const registerLobbyRouter = (broker: Aedes) => {
     if (!client) return;
 
     const topic = packet.topic;
-    const payload: any = JSON.parse(packet.payload?.toString());
+    let payload: any = null;
+
+    try {
+      payload = JSON.parse(packet?.payload?.toString());
+    } catch (error) {
+      packet.payload?.toString();
+    }
 
     const match = topic.match(LOBBY_REGEX);
     if (!match) return;
