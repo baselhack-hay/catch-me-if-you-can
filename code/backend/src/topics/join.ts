@@ -1,11 +1,10 @@
-import type Aedes from "aedes";
-import { TOPICS } from "../../../types/topics";
+import type { Client } from "aedes";
 
-export const handleJoin = (broker: Aedes) => {
-  broker.on("publish", (packet, client) => {
-    if (!client) return;
-    if (packet.topic === TOPICS.LOBBY.JOIN) {
-      console.log(`[JOIN] ${client.id} joined`);
-    }
-  });
+export const handleJoin = (
+  lobbyCode: string,
+  client: Client,
+  payload?: string
+) => {
+  console.log(`[JOIN] ${client.id} joined lobby ${lobbyCode}`);
+  console.log("payload:", payload);
 };

@@ -1,10 +1,10 @@
 import Aedes from "aedes";
-import { registerTopics } from "./topics";
+import { registerLobbyRouter } from "./topics/router";
 
 export const broker = new Aedes();
 (broker as any).instanceId = Math.random().toString(36).substring(2, 9);
 
-registerTopics(broker);
+registerLobbyRouter(broker);
 
 // Base logging
 broker.on("client", (client) => {
