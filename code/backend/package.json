@@ -6,7 +6,8 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "npx tsx src/index.ts",
-    "supa": "npx tsx src/supabase.ts"
+    "supa": "npx tsx src/supabase.ts",
+    "cli": "npx tsx src/cli.ts"
   },
   "author": "",
   "license": "ISC",
