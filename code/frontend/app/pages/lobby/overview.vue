@@ -15,10 +15,12 @@ async function onLeaveGame(): Promise<void> {
 </script>
 
 <template>
-  <div>
-    <UiTitle class="mb-20">Lobby {{ lobbyStore.code }}</UiTitle>
+  <div class="relative h-[calc(100vh-16px)] bg-(--color-chinese-black) overflow-hidden">
+    <div class="absolute -left-3/4 -top-[20vw] h-[50vh] gradient-base gradient-base-y gradient rotate-35 z-0"></div>
+    <div class="absolute -right-3/4 -bottom-[20vw] h-[50vh] gradient-base gradient-base-y gradient rotate-215 z-0"></div>
+    <UiTitle class="mb-20 z-10">Lobby {{ lobbyStore.code }}</UiTitle>
 
-    <ol class="flex flex-col gap-4 list-decimal">
+    <ol class="flex flex-col gap-4 list-decimal z-10">
       <User
         v-for="(user, index) in lobbyStore.users"
         :key="user.id ?? index"
@@ -26,7 +28,14 @@ async function onLeaveGame(): Promise<void> {
       />
     </ol>
 
-    <UiButton @click="onStartGame()"> Start </UiButton>
-    <UiButton @click="onLeaveGame()"> Leave </UiButton>
+    <UiButton @click="onStartGame()" class="z-10"> Start </UiButton>
+    <UiButton @click="onLeaveGame()" class="z-10"> Leave </UiButton>
   </div>
 </template>
+
+<style scoped>
+.gradient::before {
+  background: linear-gradient(transparent 25%, var(--color-orange) 100%);
+  pointer-events: none;
+}
+</style>
