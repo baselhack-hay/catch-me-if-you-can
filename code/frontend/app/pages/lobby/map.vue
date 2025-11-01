@@ -1,22 +1,28 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, nextTick } from "vue";
+import { ref, onMounted, onBeforeUnmount, nextTick, computed } from "vue";
+import { useRoute } from "vue-router";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
+// 🧭 Lobby-ID dynamisch aus der URL
+const route = useRoute();
+const lobbyId = computed(() => route.params.id as string);
+
 const map = ref<L.Map | null>(null);
-const showGeoError = ref(false); 
-let marker: L.Marker | null = null;
+const showGeoError = ref(false);
+let selfMarker: L.Marker | null = null;
 let geoInterval: ReturnType<typeof setInterval> | null = null;
+let userInterval: ReturnType<typeof setInterval> | null = null;
 let firstUpdate = true;
+const userMarkers = new Map<string, L.Marker>();
 
 onMounted(async () => {
   await nextTick();
 
-  const fallback: [number, number] = [47.5596, 7.5886]; 
-
+  const fallback: [number, number] = [47.5596, 7.5886]; // Basel (Fallback)
   map.value = L.map("map").setView(fallback, 13);
 
-  // Darkmode Layer
+  // 🌙 Darkmode Layer
   L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
     attribution:
       '&copy; <a href="https://carto.com/attributions">CARTO</a> | © OpenStreetMap contributors',
@@ -24,63 +30,41 @@ onMounted(async () => {
     maxZoom: 19,
   }).addTo(map.value as L.Map);
 
-  const myMarker = L.divIcon({
-    html: `
-      <div style="
-        position: relative;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      ">
-        <div style="
-          width: 0;
-          height: 0;
-          border-left: 10px solid transparent;
-          border-right: 10px solid transparent;
-          border-bottom: 20px solid #8B5CF6;
-        "></div>
-      </div>
-    `,
-    className: "",
-    iconSize: [24, 24],
-    iconAnchor: [12, 24],
-  });
+  const myMarkerIcon = getIconForRole("self");
 
   async function updatePosition(): Promise<void> {
     if (!navigator.geolocation) {
-      console.warn("⚠️ Geolocation API wird nicht unterstützt.");
       showFallbackMarker(fallback);
       showGeoError.value = true;
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
-      (pos) => {
+      async (pos) => {
         if (!map.value) return;
-        showGeoError.value = false; 
+        showGeoError.value = false;
 
         const { latitude, longitude } = pos.coords;
         const position: [number, number] = [latitude, longitude];
 
-        if (!marker) {
-          marker = L.marker(position, { icon: myMarker })
+        if (!selfMarker) {
+          selfMarker = L.marker(position, { icon: myMarkerIcon })
             .addTo(map.value as L.Map)
             .bindPopup("🟣 Du bist hier");
         } else {
-          marker.setLatLng(position);
+          selfMarker.setLatLng(position);
         }
 
         if (firstUpdate) {
           map.value.setView(position, 14);
           firstUpdate = false;
         }
+
       },
       (err) => {
         console.error("❌ Fehler beim Abrufen der Geolocation:", err);
         showFallbackMarker(fallback);
-        showGeoError.value = true; 
+        showGeoError.value = true;
       },
       { enableHighAccuracy: true }
     );
@@ -88,32 +72,156 @@ onMounted(async () => {
 
   await updatePosition();
   geoInterval = setInterval(updatePosition, 5000);
+
+  await fetchUserLocations();
+  userInterval = setInterval(fetchUserLocations, 1000);
 });
 
+//TODO: multiple players for different roles
+async function fetchUserLocations() {
+  if (!lobbyId.value) return;
+
+  try {
+    const res = await fetch(`/api/lobby/${lobbyId.value}/locations`, {
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!res.ok) {
+      console.error(`❌ Fehlerhafte Server-Antwort: ${res.status}`);
+      return;
+    }
+
+    const users = await res.json();
+
+    console.log("👥 Empfange Spieler:", users);
+    if (!Array.isArray(users) || users.length === 0) {
+      console.warn("⚠️ Keine Spieler in dieser Lobby gefunden.");
+      return;
+    }
+
+    users.forEach((user) => {
+      if (!map.value || !user.geolocation) return;
+
+      let latitude, longitude;
+
+      if (Array.isArray(user.geolocation?.coordinates)) {
+        [longitude, latitude] = user.geolocation.coordinates;
+      } else {
+        latitude = user.geolocation.latitude;
+        longitude = user.geolocation.longitude;
+      }
+
+      if (!latitude || !longitude) return;
+
+      const pos: [number, number] = [latitude, longitude];
+      const icon = getIconForRole(user.role);
+
+      // Optional: dich selbst ausblenden
+      // if (user.id === currentUserId.value) return;
+
+      if (!userMarkers.has(user.id)) {
+        const marker = L.marker(pos, { icon })
+          .addTo(map.value as L.Map)
+          .bindPopup(`${user.username} (${user.role})`);
+        userMarkers.set(user.id, marker);
+      } else {
+        userMarkers.get(user.id)?.setLatLng(pos);
+      }
+    });
+  } catch (err) {
+    console.error("❌ Fehler beim Laden der User-Locations:", err);
+  }
+}
+
+// 📍 Fallback-Marker
 function showFallbackMarker(pos: [number, number]) {
   if (!map.value) return;
-  if (!marker) {
-    marker = L.marker(pos)
+  if (!selfMarker) {
+    selfMarker = L.marker(pos)
       .addTo(map.value as L.Map)
       .bindPopup("📍 Basel (Fallback)")
       .openPopup();
     map.value.setView(pos, 13);
   } else {
-    marker.setLatLng(pos);
+    selfMarker.setLatLng(pos);
   }
 }
 
-// 🧹 Cleanup
+// 🎨 Marker je nach Rolle (Dreieck für dich, Kreise für Gegner)
+function getIconForRole(role: string): L.DivIcon {
+  const colors: Record<string, string> = {
+    Hunter: "#ef4444", // rot
+    Bunny: "#22c55e",  // grün
+    self: "#8B5CF6",   // violett (eigener Spieler)
+  };
+  const color = colors[role] || "#8B5CF6";
+
+  // 🟣 Dreieck nur für dich selbst
+  if (role === "self") {
+    return L.divIcon({
+      html: `
+        <div style="
+          position: relative;
+          width: 24px;
+          height: 24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        ">
+          <div style="
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 20px solid ${color};
+            filter: drop-shadow(0 0 2px white);
+          "></div>
+        </div>
+      `,
+      className: "",
+      iconSize: [24, 24],
+      iconAnchor: [12, 24],
+    });
+  }
+
+  // 🔴🟢 Kreis für Gegner (Hunter / Bunny)
+  return L.divIcon({
+    html: `
+      <div style="
+        width: 20px;
+        height: 20px;
+        background: ${color};
+        border: 2px solid white;
+        border-radius: 50%;
+        box-shadow: 0 0 4px rgba(0,0,0,0.4);
+      "></div>
+    `,
+    className: "",
+    iconSize: [20, 20],
+    iconAnchor: [10, 10],
+  });
+}
+
+// 🧹 Aufräumen
 onBeforeUnmount(() => {
   if (geoInterval) clearInterval(geoInterval);
-  if (map.value) map.value.remove();
-  map.value = null;
-  marker = null;
+  if (userInterval) clearInterval(userInterval);
+
+  userMarkers.forEach((m) => m.remove());
+  userMarkers.clear();
+
+  if (map.value) {
+    map.value.remove();
+    map.value = null;
+  }
+
+  selfMarker = null;
 });
 </script>
 
 <template>
   <div class="relative w-full h-[100vh]">
+    <!-- Fehleranzeige -->
     <transition name="fade">
       <div
         v-if="showGeoError"
@@ -123,6 +231,7 @@ onBeforeUnmount(() => {
       </div>
     </transition>
 
+    <!-- Karte -->
     <div id="map" class="w-full h-full" />
   </div>
 </template>
