@@ -159,7 +159,7 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.gradient-base::before {
+.gradient-base-y::before {
   content: "";
   position: absolute;
   display: block;
@@ -168,6 +168,18 @@
   height: 100%;
   width: 100%;
   mask: var(--noise), linear-gradient(transparent 5%, #000 100%);
+  pointer-events: none;
+}
+
+.gradient-base-rd::before {
+  content: "";
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  mask: var(--noise), radial-gradient(transparent 5%, #000 100%);
   pointer-events: none;
 }
 

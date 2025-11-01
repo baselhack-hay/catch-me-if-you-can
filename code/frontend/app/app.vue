@@ -11,8 +11,7 @@ onUnmounted(async () => {
 
 <template>
   <div
-    class="font-joti relative gradient-base gradient min-h-screen border-8 border-(--color-chinese-black)"
-  >
+    class="font-joti relative gradient-base gradient-base-y gradient min-h-screen border-8 border-(--color-chinese-black)">
     <NuxtPage class="flex flex-col items-center gap-4 py-10 px-10" />
   </div>
 </template>

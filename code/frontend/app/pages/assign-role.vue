@@ -1,6 +1,6 @@
 <template>
   <div
-    class="h-screen relative gradient-base gradient"
+    class="h-screen relative gradient-base-y gradient"
     :style="{
       '--color-accent': role === 'hunter' ? '#970c02' : '#5e7601',
     }"

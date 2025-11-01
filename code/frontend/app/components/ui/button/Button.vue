@@ -2,7 +2,7 @@
   <div class="relative w-60">
     <!-- div for shadow effect -->
     <div
-      class="absolute top-0.5 left-0 w-full h-full rounded-md z-0"
+      class="absolute top-1 left-0 w-full h-full rounded-md z-0"
       :class="getUnderLayerClass(variant)"
     />
 
@@ -43,7 +43,7 @@ const { variant, size } = props;
 const getUnderLayerClass = (variant?: string | null) => {
   switch (variant) {
     case "default":
-      return "bg-gradient-to-r from-(--color-selective-yellow) to-(--color-orange)";
+      return "bg-(--color-orange)";
     case "secondary":
       return "bg-(--color-cookies-and-cream)";
     case "gradient":
