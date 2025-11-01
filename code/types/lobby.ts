@@ -26,4 +26,5 @@ export type LobbyUser = {
   id: string;
   username: string;
   roleId: string | null;
+  geo?: { latitude: number; longitude: number };
 };

@@ -1,4 +1,4 @@
-export type Map = {
-  id: number;
-  geoloc: any;
+export type GeoLocation = {
+  latitude: number;
+  longitude: number;
 };

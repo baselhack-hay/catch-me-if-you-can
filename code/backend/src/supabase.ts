@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import "dotenv/config";
+import { GeoLocation } from "../../types/map";
 
 export const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -74,6 +75,21 @@ export async function setRoleInLobby(
   return data;
 }
 
+export async function setGeolocation(userId: string, geo: GeoLocation) {
+  const { data, error } = await supabase
+    .from("users")
+    .update({ geolocation: `POINT(${geo.longitude} ${geo.latitude})` })
+    .eq("id", userId)
+    .select();
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
+  return data;
+}
+
 export async function addPointsToUserInLobby(
   userId: number,
   lobbyId: number,
@@ -127,7 +143,7 @@ export async function addPointsToUserInLobby(
 export async function getUsersInLobby(lobbyId: string): Promise<any> {
   const { data, error } = await supabase
     .from("lobby_users")
-    .select("user_id, users (id, username), role_id")
+    .select("user_id, users (id, username, geolocation), role_id")
     .eq("lobby_id", lobbyId);
 
   console.error(error);
