@@ -2,7 +2,7 @@
   <div class="relative w-60">
     <!-- div for shadow effect -->
     <div
-      class="absolute top-0.5 left-0 w-full rounded-md z-0"
+      class="absolute top-0.5 left-0 w-full h-full rounded-md z-0"
       :class="getUnderLayerClass(variant)"
     />
 

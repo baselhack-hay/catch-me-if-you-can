@@ -4,7 +4,7 @@ import "./globals.css";
 
 <template>
   <div class="font-joti relative gradient-base gradient min-h-screen">
-    <NuxtPage />
+    <NuxtPage class="flex flex-col items-center gap-4 pt-20" />
   </div>
 </template>
 

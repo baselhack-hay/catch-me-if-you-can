@@ -1,16 +1,16 @@
 <template>
   <div
-    class="py-12 relative h-screen text-8xl uppercase justify-between flex flex-col items-center gap-6 text-(--color-cookies-and-cream)"
+    class="relative h-screen justify-between flex flex-col items-center gap-6"
   >
     <div class="flex flex-col items-center justify-between">
-      <p>You</p>
-      <p>are</p>
+      <UiTitle class="uppercase text-7xl">You</UiTitle>
+      <UiTitle class="uppercase text-7xl">are</UiTitle>
 
       <div class="relative w-40 h-40 flex items-center justify-center">
         <div
           v-if="props.variant === 'bunny'"
           class="absolute w-36 h-36 bg-(--color-cookies-and-cream) rounded-full"
-        ></div>
+        />
 
         <div
           v-else-if="props.variant === 'hunter'"
@@ -20,7 +20,7 @@
             border-right: 5rem solid transparent;
             border-bottom: 8rem solid var(--color-cookies-and-cream);
           "
-        ></div>
+        />
 
         <img
           v-if="props.variant === 'bunny'"
@@ -36,7 +36,7 @@
         />
       </div>
 
-      <p class="mt-3">{{ variantLabel }}</p>
+      <UiTitle class="mt-3 uppercase text-7xl">{{ variantLabel }}</UiTitle>
     </div>
 
     <Button onclick="confirmReady()">Ready?</Button>
