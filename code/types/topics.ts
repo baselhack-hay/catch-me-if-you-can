@@ -6,5 +6,6 @@ export const TOPICS = {
     START: (code: string) => `lobby/${code}/start`,
     STARTED: (code: string) => `lobby/${code}/started`,
     GEOLOCATION: (code: string) => `lobby/${code}/geo`,
+    GEOLOCATION_REQUEST: (code: string) => `lobby/${code}/geo-request`,
   },
 } as const;

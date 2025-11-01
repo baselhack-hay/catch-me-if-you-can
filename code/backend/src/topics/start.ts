@@ -1,6 +1,8 @@
 import type { Client } from "aedes";
 import { broker } from "../broker";
 import { TOPICS } from "../../../types/topics";
+import { requestGeolocation } from "../publish/requestGeo";
+import { startLobbyInterval } from "../intervalManager";
 
 export const handleStart = (
   lobbyCode: string,
@@ -23,4 +25,6 @@ export const handleStart = (
       if (err) console.error("Publish error:", err);
     }
   );
+
+  startLobbyInterval(lobbyCode, () => requestGeolocation(lobbyCode));
 };
