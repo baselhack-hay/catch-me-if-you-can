@@ -4,12 +4,14 @@ const lobbyStore = useLobbyStore();
 
 async function onJoinLobby(): Promise<void> {
   console.log(lobbyCode.value);
-  const result = await lobbyStore.joinLobby(lobbyCode.value);
-  if (result) {
-    // TODO: navigate to detail page
+  try {
+    const result = await lobbyStore.joinLobby(lobbyCode.value);
+    if (result) {
+      navigateTo("/lobby/overview");
+    }
+  } catch (e) {
+    // TODO: show snackbar that lobby join failed
   }
-
-  // TODO: show snackbar that lobby join failed
 }
 </script>
 
