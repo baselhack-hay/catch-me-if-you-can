@@ -1,6 +1,5 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import Map from '~/components/ui/map/map.vue'
 
 const lobbies = ref([]);
 
@@ -24,6 +23,9 @@ onMounted(async () => {
     <NuxtLink to="/lobby/create"
       ><UiButton variant="secondary">Create Lobby</UiButton></NuxtLink
     >
+    <NuxtLink to="lobby/map"
+      ><UiButton variant="secondary">Show Map</UiButton></NuxtLink
+    >
 
     <h2>Verfügbare Lobbies</h2>
     <ul>
@@ -31,6 +33,5 @@ onMounted(async () => {
         {{ lobby.id }}
       </li>
     </ul>
-    <Map />
   </div>
 </template>
