@@ -11,3 +11,8 @@ export type LobbySettings = {
 export type JoinLobby = {
   username: string;
 };
+
+export type GetLobbyByIdResponse = {
+  exists: boolean;
+  lobby: Lobby | null;
+};
