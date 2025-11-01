@@ -25,8 +25,9 @@ export async function addUser(id: string, username: string) {
   const { data, error } = await supabase
     .from("users")
     .upsert([{ id, username: username.trim() }])
-    .select();
-  console.log(error);
+    .select()
+    .single();
+
   return data;
 }
 
@@ -35,12 +36,14 @@ export async function createLobby(name: string, hostUserId?: number) {
   return res;
 }
 
-export async function joinLobby(userId: number, lobbyId: number) {
-  const res = await supabase
-    .from("lobby_user")
-    .insert([{ user_id: userId, lobby_id: lobbyId }])
+export async function joinLobby(userId: string, lobbyId: string) {
+  const { data, error } = await supabase
+    .from("lobby_users")
+    .upsert([{ user_id: userId, lobby_id: lobbyId }], {
+      onConflict: "lobby_id,user_id",
+    })
     .select();
-  return res;
+  return data;
 }
 
 export async function addPointsToUserInLobby(

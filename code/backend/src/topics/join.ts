@@ -1,13 +1,15 @@
 import type { Client } from "aedes";
-import { addUser } from "../supabase";
+import { addUser, joinLobby } from "../supabase";
+import { JoinLobby } from "../../../types/lobby";
 
 export const handleJoin = async (
   lobbyCode: string,
   client: Client,
-  payload?: string
+  payload: JoinLobby
 ) => {
   console.log(`[JOIN] ${client.id} joined lobby ${lobbyCode}`);
   console.log("payload:", payload);
-
-  await addUser(client.id, "Yves");
+  console.log(client.id, payload.username);
+  const user = await addUser(client.id, payload.username);
+  await joinLobby(user.id, lobbyCode);
 };

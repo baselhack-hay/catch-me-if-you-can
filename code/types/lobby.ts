@@ -7,3 +7,7 @@ export type Lobby = {
 export type LobbySettings = {
   id: string;
 };
+
+export type JoinLobby = {
+  username: string;
+};
