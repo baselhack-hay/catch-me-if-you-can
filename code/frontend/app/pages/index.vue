@@ -1,28 +1,33 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted } from "vue";
 
-const lobbies = ref([])
+const lobbies = ref([]);
 
 onMounted(async () => {
-    const res = await $fetch('/api/lobby')
-    lobbies.value = Array.isArray(res) ? res : []
-})
+  const res = await $fetch("/api/lobby");
+  lobbies.value = Array.isArray(res) ? res : [];
+});
 </script>
 
 <template>
-  <div class="flex flex-col items-center gap-4">
-    <h1>Catch me if you can</h1>
+  <div class="flex flex-col items-center gap-4 pt-20">
+    <h1 class="text-5xl font-bold text-(--color-cookies-and-cream)">
+      Catch me
+    </h1>
+    <h1 class="text-5xl font-bold text-(--color-cookies-and-cream) mb-20">
+      if you can
+    </h1>
     <NuxtLink to="/lobby/join"
-      ><UiButton variant="default">Lobby beitreten</UiButton></NuxtLink
+      ><UiButton variant="default">Join Lobby</UiButton></NuxtLink
     >
     <NuxtLink to="/lobby/create"
-      ><UiButton variant="secondary">Lobby erstellen</UiButton></NuxtLink
+      ><UiButton variant="secondary">Create Lobby</UiButton></NuxtLink
     >
 
     <h2>Verfügbare Lobbies</h2>
     <ul>
       <li v-for="lobby in lobbies" :key="lobby.id">
-      {{ lobby.id }}
+        {{ lobby.id }}
       </li>
     </ul>
   </div>
