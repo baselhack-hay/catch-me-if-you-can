@@ -43,9 +43,9 @@ async function mainMenu() {
     switch (choice) {
       case "1": {
         const username = (await rl.question("Username: ")).trim();
-        const points = await promptNumber("Starting points (enter to skip): ");
-        const res = await addUser(username, points ?? 0);
-        console.table(res.data ?? []);
+        const point = await promptNumber("Starting points (enter to skip): ");
+        const res = await addUser(username, "250");
+        console.table(res ?? []);
         break;
       }
 
