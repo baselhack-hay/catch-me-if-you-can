@@ -38,10 +38,39 @@ export async function createLobby(name: string, hostUserId?: number) {
 export async function joinLobby(userId: string, lobbyId: string) {
   const { data, error } = await supabase
     .from("lobby_users")
-    .upsert([{ user_id: userId, lobby_id: lobbyId }], {
-      onConflict: "lobby_id,user_id",
-    })
+    .upsert(
+      [
+        {
+          user_id: userId,
+          lobby_id: lobbyId,
+          role_id: "37ee07b1-1cf8-4efb-aa42-ca03d2681cf8",
+        },
+      ],
+      {
+        onConflict: "lobby_id,user_id",
+      }
+    )
     .select();
+  return data;
+}
+
+export async function setRoleInLobby(
+  userId: string,
+  lobbyId: string,
+  roleId: string
+) {
+  const { data, error } = await supabase
+    .from("lobby_users")
+    .update({ role_id: roleId })
+    .eq("user_id", userId)
+    .eq("lobby_id", lobbyId)
+    .select();
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
   return data;
 }
 
@@ -98,7 +127,7 @@ export async function addPointsToUserInLobby(
 export async function getUsersInLobby(lobbyId: string): Promise<any> {
   const { data, error } = await supabase
     .from("lobby_users")
-    .select("user_id, users (id, username)")
+    .select("user_id, users (id, username), role_id")
     .eq("lobby_id", lobbyId);
 
   console.error(error);

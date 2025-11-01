@@ -1,12 +1,14 @@
 import { broker } from "../broker";
 import { TOPICS } from "../../../types/topics";
 import { getUsersInLobby } from "../supabase";
+import { LobbyUser } from "../../../types/lobby";
 
 export const publishUsersInLobby = async (lobbyCode: string) => {
   const usersInLobby = await getUsersInLobby(lobbyCode);
-  const users = usersInLobby?.map((userInLobby: any) => ({
+  const users: LobbyUser[] = usersInLobby?.map((userInLobby: any) => ({
     id: userInLobby.users.id,
     username: userInLobby.users.username,
+    roleId: userInLobby.role_id,
   }));
 
   broker.publish(

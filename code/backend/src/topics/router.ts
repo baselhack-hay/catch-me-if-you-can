@@ -2,6 +2,7 @@ import type Aedes from "aedes";
 import { handleJoin } from "./join";
 import { handleLeave } from "./leave";
 import { handleStart } from "./start";
+import { handleRole } from "./role";
 
 // Matches: lobby/{code}/{action}
 const LOBBY_REGEX = /^lobby\/([^/]+)\/([^/]+)$/;
@@ -21,6 +22,10 @@ export const registerLobbyRouter = (broker: Aedes) => {
     switch (action) {
       case "join":
         handleJoin(lobbyCode, client, payload);
+        break;
+
+      case "role":
+        handleRole(lobbyCode, client, payload);
         break;
 
       case "leave":
