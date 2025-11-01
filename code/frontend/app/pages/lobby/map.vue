@@ -36,7 +36,6 @@ onMounted(async () => {
             border-right: 12px solid transparent;
             border-bottom: 24px solid #8B5CF6;
             border-radius: 2px;
-            box-shadow: 0 0 0 2px white;
           "></div>
         `,
         className: "",
@@ -53,7 +52,6 @@ onMounted(async () => {
             border-right: 12px solid transparent;
             border-bottom: 24px solid #EF4444;
             border-radius: 2px;
-            box-shadow: 0 0 0 2px white;
           "></div>
         `,
         className: "",
@@ -67,7 +65,6 @@ onMounted(async () => {
             width: 24px;
             height: 24px;
             background: #22C55E;
-            border: 2px solid white;
             border-radius: 50%;
           "></div>
         `,
