@@ -95,12 +95,15 @@ export async function addPointsToUserInLobby(
   };
 }
 
-export async function getUsersInLobby(lobbyId: number) {
-  const res = await supabase
-    .from("lobby_user")
-    .select("user_id, User (id, username, points)")
+export async function getUsersInLobby(lobbyId: string): Promise<any> {
+  const { data, error } = await supabase
+    .from("lobby_users")
+    .select("user_id, users (id, username)")
     .eq("lobby_id", lobbyId);
-  return res;
+
+  console.error(error);
+
+  return data;
 }
 
 export async function createMap(lobbyId: number, name: string, data: any) {
