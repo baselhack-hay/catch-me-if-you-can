@@ -1,3 +1,5 @@
+<!-- eslint-disable vue/no-multiple-template-root -->
+<!-- eslint-disable vue/html-self-closing -->
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <script setup lang="ts">
 import { ref, onMounted, nextTick } from "vue";
@@ -162,9 +164,23 @@ onMounted(async () => {
     }
   );
 });
+
+const lobbyStore = useLobbyStore();
+
+onMounted(() => {
+  console.log("current users: ", lobbyStore.users);
+});
+
+async function sendGeolocation(): Promise<void> {
+  lobbyStore.joinLobby("VUT-XLF", "mqttjs_f6a8f929")
+  lobbyStore.sendGeolocation({ latitude: 45, longitude: 7 });
+}
 </script>
 
 <template>
+  <div>
+    <ui-button @click="sendGeolocation()"> Send Geolocation </ui-button>
+  </div>
   <div id="map" class="w-full h-[100vh]"></div>
 </template>
 
