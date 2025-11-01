@@ -16,7 +16,7 @@ export const useLobbyStore = defineStore("lobbyStore", {
       code: "",
       client: null,
       users: [],
-    }) as LobbyStore,
+    } as LobbyStore),
   actions: {
     async joinLobby(lobbyCode: string, nickname: string): Promise<boolean> {
       try {
@@ -31,6 +31,7 @@ export const useLobbyStore = defineStore("lobbyStore", {
       } catch (e) {
         console.error(
           "Failed to join lobby, as it does not exist or has already started",
+          e
         );
         return Promise.resolve(false);
       }
@@ -41,7 +42,7 @@ export const useLobbyStore = defineStore("lobbyStore", {
         TOPICS.LOBBY.START(this.code),
         JSON.stringify({
           message: "starting game...",
-        }),
+        })
       );
       return Promise.resolve(true);
     },
@@ -50,14 +51,10 @@ export const useLobbyStore = defineStore("lobbyStore", {
       console.log("handle join event: ", user);
     },
 
-    async handleLeaveEvent(): Promise<void> {},
-
     async handleUsersEvent(users: LobbyUser[]): Promise<void> {
       console.log("handle users event: ", users);
       this.users = users;
     },
-
-    async handleStartEvent(): Promise<void> {},
 
     async handleStartedEvent(): Promise<void> {
       console.log("handle started event... navigating to map");
@@ -72,13 +69,11 @@ export const useLobbyStore = defineStore("lobbyStore", {
 
       this.client.publish(
         TOPICS.LOBBY.GEOLOCATION(this.code),
-        JSON.stringify(geo),
+        JSON.stringify(geo)
       );
     },
     async handleError(message: string): Promise<void> {
       console.error("Lobby error:", message);
-    }
+    },
   },
 });
-
-

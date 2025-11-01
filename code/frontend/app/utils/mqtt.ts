@@ -4,7 +4,7 @@ import { TOPICS } from "types/topics";
 
 export function joinChannel(
   lobbyCode: string,
-  nickname: string,
+  nickname: string
 ): mqtt.MqttClient | null {
   const config = useRuntimeConfig();
   const lobbyStore = useLobbyStore();
@@ -22,19 +22,13 @@ export function joinChannel(
             switch (topic) {
               case "join":
                 lobbyStore.handleJoinEvent(
-                  JSON.parse(payload.toString()) as unknown as LobbyUser,
+                  JSON.parse(payload.toString()) as unknown as LobbyUser
                 );
-                break;
-              case "leave":
-                lobbyStore.handleLeaveEvent();
                 break;
               case "users":
                 lobbyStore.handleUsersEvent(
-                  JSON.parse(payload.toString()) as unknown as LobbyUser[],
+                  JSON.parse(payload.toString()) as unknown as LobbyUser[]
                 );
-                break;
-              case "start":
-                lobbyStore.handleStartEvent();
                 break;
               case "started":
                 lobbyStore.handleStartedEvent();
@@ -49,6 +43,7 @@ export function joinChannel(
         JSON.stringify({
           username: nickname,
         }),
+        { qos: 2 }
       );
     });
 
