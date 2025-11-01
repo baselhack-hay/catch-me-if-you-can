@@ -10,8 +10,9 @@ export default defineNuxtConfig({
     "@nuxt/eslint",
     "@nuxt/image",
     "@nuxt/ui",
-    "shadcn-nuxt",
     // "@nuxtjs/supabase",
+    "shadcn-nuxt",
+    "@pinia/nuxt",
   ],
   vite: {
     plugins: [tailwindcss()],
@@ -19,6 +20,11 @@ export default defineNuxtConfig({
   shadcn: {
     prefix: "",
     componentDir: "./components/ui",
+  },
+  runtimeConfig: {
+    public: {
+      apiUrl: process.env.NUXT_PUBLIC_API_URL,
+    },
   },
   alias: {
     types: fileURLToPath(new URL("../types", import.meta.url)),
