@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
+import Map from '~/components/ui/map/map.vue'
 
 const lobbies = ref([]);
 
@@ -30,5 +31,6 @@ onMounted(async () => {
         {{ lobby.id }}
       </li>
     </ul>
+    <Map />
   </div>
 </template>
