@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-const role = "hunter";
+const role = "hunter"; // or bunny
 </script>
 
 <style scoped>

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative h-screen justify-between flex flex-col items-center gap-6"
+    class="relative h-[calc(100vh-80px)] justify-between flex flex-col items-center gap-6"
   >
     <div class="flex flex-col items-center justify-between">
       <UiTitle class="uppercase text-7xl">You</UiTitle>
@@ -38,8 +38,9 @@
 
       <UiTitle class="mt-3 uppercase text-7xl">{{ variantLabel }}</UiTitle>
     </div>
-
-    <Button onclick="confirmReady()">Ready?</Button>
+    <div class="mb-5">
+      <Button @click="confirmReady()">Ready?</Button>
+    </div>
   </div>
 </template>
 
@@ -55,6 +56,8 @@ const props = defineProps<Props>();
 const variantLabel = computed(() =>
   props.variant === "hunter" ? "hunter" : "bunny"
 );
+
+const confirmReady = () => {};
 </script>
 
 <style scoped>
