@@ -1,6 +1,6 @@
 import { lobbySchema } from "validationTypes/lobby";
 import { generateLobbyCode } from "./generateLobbyCode";
-import { supabaseClient } from "../lib/supabaseClient";
+import { supabaseClient } from "../../app/lib/supabaseClient";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);

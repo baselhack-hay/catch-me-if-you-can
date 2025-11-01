@@ -1,4 +1,4 @@
-import { getLobbies } from "../lib/supabaseClient";
+import { getLobbies } from "../../app/lib/supabaseClient";
 import { defineEventHandler } from "h3";
 
 export default defineEventHandler(async () => {

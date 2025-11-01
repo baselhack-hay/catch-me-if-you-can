@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
-import { supabaseClient } from "../../lib/supabaseClient";
+import { supabaseClient } from "../../../app/lib/supabaseClient";
 import { GetLobbyByIdResponse } from "types/lobby";
 
 export default defineEventHandler(async (event): Promise<GetLobbyByIdResponse> => {
