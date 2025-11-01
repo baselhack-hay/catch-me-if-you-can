@@ -4,7 +4,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 const map = ref<L.Map | null>(null);
-const lobbyStore = useLobbyStore();
+// const lobbyStore = useLobbyStore();
 let geoInterval: ReturnType<typeof setInterval> | null = null;
 
 onMounted(async () => {
@@ -76,19 +76,6 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   if (geoInterval) clearInterval(geoInterval);
 });
-
-async function sendGeolocation(): Promise<void> {
-  if (!navigator.geolocation) return;
-
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      const { latitude, longitude } = pos.coords;
-      console.log("📍 Sende Geolocation:", latitude, longitude);
-      lobbyStore.sendGeolocation({ latitude, longitude });
-    },
-    (err) => console.warn("Geolocation-Fehler:", err),
-  );
-}
 </script>
 
 <template>

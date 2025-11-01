@@ -33,6 +33,9 @@ export function joinChannel(
               case "started":
                 lobbyStore.handleStartedEvent();
                 break;
+              case "geo-request":
+                lobbyStore.sendGeolocation();
+                break;
               default:
                 break;
             }

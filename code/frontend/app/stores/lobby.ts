@@ -1,6 +1,5 @@
 import type { MqttClient } from "mqtt";
 import type { LobbyUser } from "types/lobby";
-import type { GeoLocation } from "types/map";
 import { TOPICS } from "types/topics";
 import { getLobbyById } from "~/utils/lobby";
 
@@ -61,15 +60,24 @@ export const useLobbyStore = defineStore("lobbyStore", {
       navigateTo("/game");
     },
 
-    async sendGeolocation(geo: GeoLocation): Promise<void> {
+    async sendGeolocation(): Promise<void> {
       if (!this.code || !this.client) {
         console.warn("Cannot send geolocation without lobby connection");
         return;
       }
 
-      this.client.publish(
-        TOPICS.LOBBY.GEOLOCATION(this.code),
-        JSON.stringify(geo)
+      if (!navigator.geolocation) return;
+
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const geo = pos.coords;
+          console.log("📍 Sende Geolocation:", geo.latitude, geo.longitude);
+          this.client?.publish(
+            TOPICS.LOBBY.GEOLOCATION(this.code),
+            JSON.stringify(geo)
+          );
+        },
+        (err) => console.warn("Geolocation-Fehler:", err)
       );
     },
     async handleError(message: string): Promise<void> {
