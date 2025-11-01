@@ -1,9 +1,11 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import url("https://fonts.googleapis.com/css2?family=Joti+One&display=swap");
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --font-display: "Joti One", serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -43,6 +45,22 @@
 }
 
 :root {
+  --joti: "Joti One", sans-serif;
+  --color-chinese-black: #0c1426;
+  --color-cookies-and-cream: #f0dbab;
+  --color-selective-yellow: #f9bc06;
+  --color-orange: #f09700;
+  --color-windsor-tan: #b25004;
+  --color-pastel-red: #ff655a;
+  --color-electric-red: #e11203;
+  --color-crimson-red: #970c02;
+  --color-apple-green: #8fb10c;
+  --color-avocado: #5e7601;
+  --color-pullman-green: #3d4d00;
+  --color-medium-purple: #906eff;
+  --color-blue-purple: #7a20f0;
+  --color-pixie-purple: #460c92;
+  --color-misty-moss: #c3aa72;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -111,6 +129,12 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
+}
+
+@layer utilities {
+  .font-joti {
+    font-family: var(--font-display);
+  }
 }
 
 @layer base {
