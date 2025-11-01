@@ -10,6 +10,10 @@ export type LobbyStore = {
   nickname: string;
   client: MqttClient | null;
   users: LobbyUser[];
+  uuids: {
+    hunter: string;
+    bunny: string;
+  };
 };
 
 export const useLobbyStore = defineStore("lobbyStore", {
@@ -19,6 +23,10 @@ export const useLobbyStore = defineStore("lobbyStore", {
       nickname: "",
       client: null,
       users: [],
+      uuids: {
+        hunter: "08182765-80e1-45fd-ac2f-201986b30de1",
+        bunny: "37ee07b1-1cf8-4efb-aa42-ca03d2681cf8"
+      }
     }) as LobbyStore,
   actions: {
     async createLobby(lobbyname: string, nickname: string): Promise<void> {

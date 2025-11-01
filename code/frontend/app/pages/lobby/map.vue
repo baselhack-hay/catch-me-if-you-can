@@ -136,10 +136,8 @@ async function fetchUserLocations() {
         const marker = L.marker(pos, { icon })
           .addTo(map.value as L.Map)
           .addEventListener("click", () => {
-            // TODO: Prüfen, ob aktueller Spieler nicht Hunter ist. => returnen
-            // if (currentPlayer?.roleId != {Hunter UUID}) return;
-            // TODO: Prüfen, ob angeclickter Spieler ein Hunter ist. => returnen
-            // if (user.role == {Hunter UUID}) return;
+            if (currentPlayer?.roleId != lobbyStore.uuids.hunter) return;
+            if (user.role == lobbyStore.uuids.hunter) return;
             selectedPlayer.value = user;
             dialogOpen.value = true;
           });
