@@ -1,20 +1,33 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, nextTick, computed } from "vue";
+import { ref, onMounted, onBeforeUnmount, nextTick, computed, openBlock } from "vue";
 import { useRoute } from "vue-router";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import type { LobbyUser } from "types/lobby";
 
 // 🧭 Lobby-ID dynamisch aus der URL
 const route = useRoute();
 const lobbyId = computed(() => route.params.id as string);
 
 const map = ref<L.Map | null>(null);
+const dialogOpen = ref<boolean>(false)
+const selectedPlayer = ref<LobbyUser | null>(null);
 const showGeoError = ref(false);
 let selfMarker: L.Marker | null = null;
 let geoInterval: ReturnType<typeof setInterval> | null = null;
 let userInterval: ReturnType<typeof setInterval> | null = null;
 let firstUpdate = true;
 const userMarkers = new Map<string, L.Marker>();
+
+const lobbyStore = useLobbyStore();
+const currentPlayer = lobbyStore.users.filter(p => p.username == lobbyStore.nickname)[0];
+
+const catchPlayer = () => {
+  // TODO: Anfrage ans Backend, um spieler `selectedPlayer` zu fangen. Check, dass dieser Spieler ein Bunny ist wurde bereits gemacht.
+  selectedPlayer.value = null;
+  dialogOpen.value = false;
+}
+
 
 onMounted(async () => {
   await nextTick();
@@ -122,7 +135,14 @@ async function fetchUserLocations() {
       if (!userMarkers.has(user.id)) {
         const marker = L.marker(pos, { icon })
           .addTo(map.value as L.Map)
-          .bindPopup(`${user.username} (${user.role})`);
+          .addEventListener("click", () => {
+            // TODO: Prüfen, ob aktueller Spieler nicht Hunter ist. => returnen
+            // if (currentPlayer?.roleId != {Hunter UUID}) return;
+            // TODO: Prüfen, ob angeclickter Spieler ein Hunter ist. => returnen
+            // if (user.role == {Hunter UUID}) return;
+            selectedPlayer.value = user;
+            dialogOpen.value = true;
+          });
         userMarkers.set(user.id, marker);
       } else {
         userMarkers.get(user.id)?.setLatLng(pos);
@@ -220,6 +240,19 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
+  <ui-dialog :open="true">
+    <ui-dialog-content>
+      <ui-dialog-header>
+        <ui-dialog-title>
+          Catch <span class="text-(--color-electric-red)">{{selectedPlayer?.username}}</span>?
+        </ui-dialog-title>
+      </ui-dialog-header>
+
+      <ui-button @click="catchPlayer">Accept</ui-button>
+      <ui-button @click="dialogOpen = false; selectedPlayer = null;">Deny</ui-button>
+
+    </ui-dialog-content>
+  </ui-dialog>
   <div class="relative w-full h-[100vh]">
     <!-- Fehleranzeige -->
     <transition name="fade">
@@ -240,7 +273,7 @@ onBeforeUnmount(() => {
 #map {
   width: 100%;
   height: 100%;
-  z-index: 9000;
+  z-index: 10;
 }
 
 .fade-enter-active,

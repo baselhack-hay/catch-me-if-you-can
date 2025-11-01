@@ -28,23 +28,6 @@ onMounted(async () => {
       ><UiButton variant="secondary">Show Map</UiButton></NuxtLink
     >
 
-    <ui-dialog>
-      <ui-dialog-trigger>
-        Edit Profile
-      </ui-dialog-trigger>
-
-      <ui-dialog-content>
-        <ui-dialog-header>
-          <ui-dialog-title>
-            Hunter <span>Cyril</span> said they caught you.
-          </ui-dialog-title>
-        </ui-dialog-header>
-
-        <ui-button>Accept</ui-button>
-        <ui-button>Deny</ui-button>
-      </ui-dialog-content>
-    </ui-dialog>
-
     <h2>Verfügbare Lobbies</h2>
       <ul>
         <li 
