@@ -11,11 +11,17 @@ async function onStartGame(): Promise<void> {
 </script>
 
 <template>
-  <h1>Lobby {{ lobbyStore.code }}</h1>
+  <div>
+    <UiTitle class="mb-20">Lobby {{ lobbyStore.code }}</UiTitle>
 
-  <ol class="flex flex-col gap-4 list-decimal">
-    <User v-for="user in lobbyStore.users" :user="user" />
-  </ol>
+    <ol class="flex flex-col gap-4 list-decimal">
+      <User
+        v-for="(user, index) in lobbyStore.users"
+        :key="user.id ?? index"
+        :user="user"
+      />
+    </ol>
 
-  <UiButton @click="onStartGame()"> Start </UiButton>
+    <UiButton @click="onStartGame()"> Start </UiButton>
+  </div>
 </template>
