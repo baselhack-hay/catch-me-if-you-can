@@ -10,7 +10,7 @@ async function onCreateLobby(): Promise<void> {
 </script>
 <template>
   <div>
-    <UiTitle class="mb-20">Create Lobby</UiTitle>
+    <UiTitle class="mb-20 text-center">Create Lobby</UiTitle>
     <UiInput placeholder="Lobbyname" v-model="lobbyName" />
     <UiInput placeholder="Nickname" v-model="nickname" />
     <UiButton variant="secondary" @click="onCreateLobby()">Create</UiButton>

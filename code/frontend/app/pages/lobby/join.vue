@@ -17,7 +17,7 @@ async function onJoinLobby(): Promise<void> {
 
 <template>
   <div>
-    <UiTitle class="mb-20">Join Lobby</UiTitle>
+    <UiTitle class="mb-20 text-center">Join Lobby</UiTitle>
     <UiInput placeholder="Lobby Code" v-model="lobbyCode" />
     <UiInput placeholder="Nickname" v-model="nickname" />
     <UiButton @click="onJoinLobby()">Join</UiButton>
