@@ -145,9 +145,9 @@ function updateUserMarkers(users: LobbyUser[]) {
 
 function getIconForRole(role: string): L.DivIcon {
   const colors: Record<string, string> = {
-    "08182765-80e1-45fd-ac2f-201986b30de1": "#ef4444", 
-    "37ee07b1-1cf8-4efb-aa42-ca03d2681cf8": "#22c55e", 
-    self: "#8B5CF6", 
+    "08182765-80e1-45fd-ac2f-201986b30de1": "#ef4444",
+    "37ee07b1-1cf8-4efb-aa42-ca03d2681cf8": "#22c55e",
+    self: "#8B5CF6",
   };
   const color = colors[role] || "#8B5CF6";
 
@@ -193,10 +193,7 @@ onBeforeUnmount(() => {
         </ui-dialog-title>
       </ui-dialog-header>
       <ui-button @click="catchPlayer" :variant="`positive`">Yes</ui-button>
-      <ui-button
-        @click="dialogOpen = false; selectedPlayer = null;"
-        :variant="`negative`"
-      >No</ui-button>
+      <ui-button @click="dialogOpen = false; selectedPlayer = null;" :variant="`negative`">No</ui-button>
     </ui-dialog-content>
   </ui-dialog>
 
@@ -205,7 +202,7 @@ onBeforeUnmount(() => {
     <ui-dialog-content>
       <ui-dialog-header>
         <ui-dialog-title>
-          Hunter <span class="text-(--color-electric-red)">{{confirmCatchHunter?.username}}</span>
+          Hunter <span class="text-(--color-electric-red)">{{ confirmCatchHunter?.username }}</span>
           said they caught you.
         </ui-dialog-title>
       </ui-dialog-header>
@@ -217,10 +214,8 @@ onBeforeUnmount(() => {
   </ui-dialog>
   <div class="relative w-full h-[calc(100vh-16px)]">
     <transition name="fade">
-      <div
-        v-if="showGeoError"
-        class="absolute top-4 left-1/2 -translate-x-1/2 bg-red-600 text-white px-4 py-2 rounded-xl shadow-lg z-[10000]"
-      >
+      <div v-if="showGeoError"
+        class="absolute top-4 left-1/2 -translate-x-1/2 bg-red-600 text-white px-4 py-2 rounded-xl shadow-lg z-[10000]">
         ❌ Location could not be retrieved. Please allow access to your location.
       </div>
     </transition>
@@ -243,7 +238,9 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  filter: drop-shadow(2px 2px 1px var(--color-cookies-and-cream)) drop-shadow(2px -2px 1px var(--color-cookies-and-cream)) drop-shadow(-2px 2px 1px var(--color-cookies-and-cream)) drop-shadow(-2px -2px 1px var(--color-cookies-and-cream));
 }
+
 .marker-self .triangle {
   width: 0;
   height: 0;
@@ -262,15 +259,35 @@ onBeforeUnmount(() => {
   box-shadow: 0 0 10px var(--marker-color, #ef4444);
   animation: markerPulse 1.6s ease-in-out infinite;
 }
+
 @keyframes markerPulse {
-  0% { transform: scale(1); opacity: 1; box-shadow: 0 0 8px var(--marker-color); }
-  50% { transform: scale(1.6); opacity: 0.6; box-shadow: 0 0 20px var(--marker-color); }
-  100% { transform: scale(1); opacity: 1; box-shadow: 0 0 8px var(--marker-color); }
+  0% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 8px var(--marker-color);
+  }
+
+  50% {
+    transform: scale(1.6);
+    opacity: 0.6;
+    box-shadow: 0 0 20px var(--marker-color);
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 8px var(--marker-color);
+  }
 }
 
 /* Fade für Fehlermeldung */
 .fade-enter-active,
-.fade-leave-active { transition: opacity 0.5s ease; }
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
 .fade-enter-from,
-.fade-leave-to { opacity: 0; }
+.fade-leave-to {
+  opacity: 0;
+}
 </style>

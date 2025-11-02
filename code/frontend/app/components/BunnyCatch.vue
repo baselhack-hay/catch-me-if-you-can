@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen flex flex-col justify-center items-center">
+  <div class="h-[calc(100vh-16px)] flex flex-col justify-center items-center">
     <div class="flex flex-col items-center justify-center text-center z-10">
       <UiTitle class="uppercase">
         {{ props.variant === "bunny" ? "You were caught" : "You caught" }}
