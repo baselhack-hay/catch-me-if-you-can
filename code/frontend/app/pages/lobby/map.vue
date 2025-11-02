@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-multiple-template-root -->
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, nextTick, computed } from "vue";
 import L from "leaflet";
@@ -176,16 +177,28 @@ function getIconForRole(role: string): L.DivIcon {
     return L.divIcon({
       html: `
         <div class="marker-self" style="--marker-color:${color};">
-          <div class="triangle"></div>
+           <div class="triangle"></div>
         </div>`,
       className: "leaflet-marker-custom",
       iconSize: [24, 24],
       iconAnchor: [12, 24],
     });
   }
-
+  if(role ==="08182765-80e1-45fd-ac2f-201986b30de1"){
+    // Hunter
+    return L.divIcon({
+      html: `<div class="marker-enemy" style="--marker-color:${color};">
+        <div class="triangle"></div>
+      </div>`,
+      className: "leaflet-marker-custom",
+      iconSize: [20, 20],
+      iconAnchor: [10, 10],
+    });
+  }
   return L.divIcon({
-    html: `<div class="marker-enemy" style="--marker-color:${color};"></div>`,
+    html: `<div class="marker-bunny" style="--marker-color:${color};">
+      <div class="triangle"></div>
+    </div>`,
     className: "leaflet-marker-custom",
     iconSize: [20, 20],
     iconAnchor: [10, 10],
@@ -246,6 +259,10 @@ onBeforeUnmount(() => {
 
 <style>
 /* Marker global sichtbar machen */
+
+#map {
+  z-index: 40;
+}
 .leaflet-marker-custom {
   background: transparent;
   border: none;
@@ -259,19 +276,53 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  filter: drop-shadow(2px 2px 1px var(--color-cookies-and-cream)) drop-shadow(2px -2px 1px var(--color-cookies-and-cream)) drop-shadow(-2px 2px 1px var(--color-cookies-and-cream)) drop-shadow(-2px -2px 1px var(--color-cookies-and-cream));
+  background: var(--marker-color, #8B5CF6);
+  border: 2px solid var(--color-cookies-and-cream);
+  box-shadow: 0 0 10px var(--marker-color, #8B5CF6);
+  border-radius: 4px; /* Optional: slightly rounded corners */
 }
 
 .marker-self .triangle {
+  display: none; /* Remove triangle for square marker */
+}
+
+.marker-enemy {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: markerPulseTriangle 1.6s ease-in-out infinite;
+}
+
+.marker-enemy .triangle {
   width: 0;
   height: 0;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
-  border-bottom: 20px solid var(--marker-color, #8B5CF6);
+  border-bottom: 20px solid var(--marker-color, #ef4444);
+  /* Add white border */
+  border-bottom-width: 18px;
+  border-bottom-style: solid;
+  border-bottom-color: var(--marker-color, #ef4444);
+  position: relative;
+}
+.marker-enemy .triangle::after {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: -4px;
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 24px solid #fff;
+    box-shadow: 0 0 100px var(--marker-color, #ef4444);
+  z-index: -1;
 }
 
-/* 🔴🟢 Gegner – pulsierend */
-.marker-enemy {
+.marker-bunny {
   width: 20px;
   height: 20px;
   border-radius: 50%;
@@ -299,6 +350,18 @@ onBeforeUnmount(() => {
     opacity: 1;
     box-shadow: 0 0 8px var(--marker-color);
   }
+}
+
+@keyframes markerPulseTriangle {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 0.6; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes markerPulseTriangle {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 0.6; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 /* Fade für Fehlermeldung */
