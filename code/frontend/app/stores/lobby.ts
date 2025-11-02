@@ -212,7 +212,15 @@ export const useLobbyStore = defineStore("lobbyStore", {
       return Promise.resolve(hunter);
     },
 
-    confirmOrDenyCatch(bunny: LobbyUser, confirm: boolean) {},
+    confirmOrDenyCatch(bunny: LobbyUser, confirm: boolean) {
+      this.client?.publish(
+        TOPICS.LOBBY.CONFIRM_CATCH(this.code),
+        JSON.stringify({
+          message: "confirm catch",
+        })
+      );
+      navigateTo("/bunny-catch");
+    },
 
     async handleError(message: string): Promise<void> {
       console.error("Lobby error:", message);

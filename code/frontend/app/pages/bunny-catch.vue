@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-const role = "hunter";
+const role = "bunny";
 </script>
 
 <style scoped>
