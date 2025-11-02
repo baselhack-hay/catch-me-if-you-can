@@ -246,8 +246,8 @@ onBeforeUnmount(() => {
         </ui-dialog-title>
       </ui-dialog-header>
 
-      <ui-button @click="catchPlayer">Accept</ui-button>
-      <ui-button @click="dialogOpen = false; selectedPlayer = null;">Deny</ui-button>
+      <ui-button @click="catchPlayer" :variant="`positive`">Yes</ui-button>
+      <ui-button @click="dialogOpen = false; selectedPlayer = null;" :variant="`negative`">No</ui-button>
 
     </ui-dialog-content>
   </ui-dialog>
