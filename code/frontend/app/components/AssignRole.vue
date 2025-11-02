@@ -70,7 +70,9 @@ const variantLabel = computed(() =>
   props.variant === "hunter" ? "hunter" : "bunny"
 );
 
-const confirmReady = () => {};
+const confirmReady = () => {
+  navigateTo(`/game`);
+};
 </script>
 
 <style scoped>

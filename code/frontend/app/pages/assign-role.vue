@@ -10,7 +10,12 @@
 </template>
 
 <script setup lang="ts">
-const role = "hunter"; // or bunny
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+
+const role = computed(() => route.query.role ?? "hunter");
 </script>
 
 <style scoped>

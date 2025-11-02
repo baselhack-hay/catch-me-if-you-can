@@ -89,8 +89,16 @@ export const useLobbyStore = defineStore("lobbyStore", {
     },
 
     async handleStartedEvent(): Promise<void> {
-      console.log("handle started event... navigating to map");
-      navigateTo("/game");
+      console.log("handle started event... navigating to assign role");
+      const clientId = getPersistentClientId();
+      console.log("clientId", clientId);
+      const user = this.users.find((u) => u.id === clientId);
+
+      console.log("current user", user);
+      const role = user?.roleId === this.uuids.hunter ? "hunter" : "bunny";
+      console.log("current role", role);
+
+      navigateTo(`/assign-role?role=${role}`);
     },
 
     async leaveLobby(): Promise<void> {

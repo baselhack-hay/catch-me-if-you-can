@@ -1,7 +1,7 @@
 import mqtt from "mqtt";
 import type { MqttClient } from "mqtt";
 
-function getPersistentClientId() {
+export function getPersistentClientId() {
   if (typeof window === "undefined") return "user_" + Math.random();
 
   const key = "mqtt_client_id";
