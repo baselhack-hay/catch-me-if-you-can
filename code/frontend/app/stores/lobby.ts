@@ -25,9 +25,9 @@ export const useLobbyStore = defineStore("lobbyStore", {
       users: [],
       uuids: {
         hunter: "08182765-80e1-45fd-ac2f-201986b30de1",
-        bunny: "37ee07b1-1cf8-4efb-aa42-ca03d2681cf8"
-      }
-    }) as LobbyStore,
+        bunny: "37ee07b1-1cf8-4efb-aa42-ca03d2681cf8",
+      },
+    } as LobbyStore),
   actions: {
     async createLobby(lobbyname: string, nickname: string): Promise<void> {
       const result = await postLobby({
@@ -47,11 +47,13 @@ export const useLobbyStore = defineStore("lobbyStore", {
     },
 
     async joinLobby(lobbyCode: string, nickname: string): Promise<boolean> {
+      console.log("client", this.client);
       try {
         const result = await getLobbyById(lobbyCode);
         if (result.exists) {
           this.code = lobbyCode;
           this.nickname = nickname;
+          console.log("client", this.client);
           this.client = joinChannel(lobbyCode, nickname);
           this.saveToSessionStorage();
           return Promise.resolve(true);
@@ -61,7 +63,7 @@ export const useLobbyStore = defineStore("lobbyStore", {
       } catch (e) {
         console.error(
           "Failed to join lobby, as it does not exist or has already started",
-          e,
+          e
         );
         return Promise.resolve(false);
       }
@@ -72,7 +74,7 @@ export const useLobbyStore = defineStore("lobbyStore", {
         TOPICS.LOBBY.START(this.code),
         JSON.stringify({
           message: "starting game...",
-        }),
+        })
       );
       return Promise.resolve(true);
     },
@@ -94,10 +96,12 @@ export const useLobbyStore = defineStore("lobbyStore", {
     async leaveLobby(): Promise<void> {
       this.client?.publish(
         TOPICS.LOBBY.LEAVE(this.code),
-        JSON.stringify({ lobbyCode: this.code }),
+        JSON.stringify({ lobbyCode: this.code })
       );
       console.log("leave");
-      this.client?.end();
+      this.client?.unsubscribe(`lobby/${this.code}/#`);
+      this.code = "";
+      // this.client?.end();
       navigateTo("/");
     },
 
@@ -115,10 +119,10 @@ export const useLobbyStore = defineStore("lobbyStore", {
           console.log("📍 Sending Geolocation:", geo.latitude, geo.longitude);
           this.client?.publish(
             TOPICS.LOBBY.GEOLOCATION(this.code),
-            JSON.stringify(geo),
+            JSON.stringify(geo)
           );
         },
-        (err) => console.warn("Geolocation-Fehler:", err),
+        (err) => console.warn("Geolocation-Fehler:", err)
       );
     },
     async handleError(message: string): Promise<void> {
@@ -126,6 +130,9 @@ export const useLobbyStore = defineStore("lobbyStore", {
     },
 
     async disconnectMqttClient() {
+      this.code = "";
+      this.nickname = "";
+      this.saveToSessionStorage();
       this.client?.end();
     },
 
@@ -135,7 +142,7 @@ export const useLobbyStore = defineStore("lobbyStore", {
         JSON.stringify({
           code: this.code,
           nickname: this.nickname,
-        }),
+        })
       );
     },
 

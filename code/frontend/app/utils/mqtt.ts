@@ -1,6 +1,7 @@
 import mqtt from "mqtt";
 import type { LobbyUser } from "types/lobby";
 import { TOPICS } from "types/topics";
+import { getMqttClient } from "./mqttClient";
 
 export function joinChannel(
   lobbyCode: string,
@@ -8,11 +9,14 @@ export function joinChannel(
 ): mqtt.MqttClient | null {
   const config = useRuntimeConfig();
   const lobbyStore = useLobbyStore();
+  console.log("lobbyCode", lobbyCode);
 
   try {
-    const client = mqtt.connect(config.public.mqttUrl, {
-      clientId: nickname,
-    });
+    console.log("trigger connect");
+    const client = getMqttClient(config.public.mqttUrl);
+
+    if (!client) return null;
+
     client.on("connect", () => {
       client
         .subscribe(`lobby/${lobbyCode}/#`)

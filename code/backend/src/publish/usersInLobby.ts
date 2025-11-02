@@ -13,6 +13,8 @@ export const publishUsersInLobby = async (lobbyCode: string) => {
     geo: parseWkbPoint(userInLobby.users.geolocation),
   }));
 
+  console.log("PUBLISH USERS", users);
+
   broker.publish(
     {
       cmd: "publish",

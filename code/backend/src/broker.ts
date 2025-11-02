@@ -14,7 +14,7 @@ broker.on("client", (client) => {
 
 broker.on("clientDisconnect", (client) => {
   console.log(`👋 Client disconnected: ${client?.id}`);
-  removeUserFromLobby(client.id);
+  // removeUserFromLobby(client.id);
 });
 
 broker.on("clientError", (client, err) => {
