@@ -10,7 +10,9 @@ const route = useRoute();
 const lobbyId = computed(() => route.params.id as string);
 
 const map = ref<L.Map | null>(null);
-const dialogOpen = ref<boolean>(false)
+const dialogOpen = ref<boolean>(false);
+const confirmCatchDialogOpen = ref<boolean>(false);
+const confirmCatchHunter = ref<LobbyUser | null>(null);
 const selectedPlayer = ref<LobbyUser | null>(null);
 const showGeoError = ref(false);
 let selfMarker: L.Marker | null = null;
@@ -26,6 +28,29 @@ const catchPlayer = () => {
   // TODO: Anfrage ans Backend, um spieler `selectedPlayer` zu fangen. Check, dass dieser Spieler ein Bunny ist wurde bereits gemacht.
   selectedPlayer.value = null;
   dialogOpen.value = false;
+}
+
+// TODO: Aufrufen, wenn aktueller Spieler gefangen wurde.
+const onCaught = (hunter: LobbyUser) => {
+  confirmCatchHunter.value = hunter;
+  confirmCatchDialogOpen.value = true;
+}
+
+const confirmCatch = () => {
+  // TODO: Call ans Backend, dass Spieler gefangen wurde
+  // Aktueller spieler in Variable `currentPlayer`
+  // Hunter in variable `confirmCatchHunter`
+
+  confirmCatchDialogOpen.value = false;
+}
+
+const denyCatch = () => {
+  // TODO: Call ans Backend, dass Spieler ablehnt, gefangen worden zu sein
+  // Aktueller spieler in Variable `currentPlayer`
+  // Hunter in variable `confirmCatchHunter`
+
+  confirmCatchHunter.value = null;
+  confirmCatchDialogOpen.value = false;
 }
 
 
@@ -248,6 +273,21 @@ onBeforeUnmount(() => {
 
       <ui-button @click="catchPlayer" :variant="`positive`">Yes</ui-button>
       <ui-button @click="dialogOpen = false; selectedPlayer = null;" :variant="`negative`">No</ui-button>
+
+    </ui-dialog-content>
+  </ui-dialog>
+
+  <ui-dialog :open="confirmCatchDialogOpen">
+    <ui-dialog-content>
+      <ui-dialog-header>
+        <ui-dialog-title>
+          Hunter <span class="text-(--color-electric-red)">{{confirmCatchHunter?.username}}</span>
+          said they caught you.
+        </ui-dialog-title>
+      </ui-dialog-header>
+
+      <ui-button @click="confirmCatch" :variant="`positive`">Accept</ui-button>
+      <ui-button @click="denyCatch" :variant="`negative`">Deny</ui-button>
 
     </ui-dialog-content>
   </ui-dialog>
