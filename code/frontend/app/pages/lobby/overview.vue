@@ -15,9 +15,15 @@ async function onLeaveGame(): Promise<void> {
 </script>
 
 <template>
-  <div class="relative h-[calc(100vh-16px)] bg-(--color-chinese-black) overflow-hidden">
-    <div class="absolute -left-3/4 -top-[20vw] h-[50vh] gradient-base gradient-base-y gradient rotate-35 z-0"></div>
-    <div class="absolute -right-3/4 -bottom-[20vw] h-[50vh] gradient-base gradient-base-y gradient rotate-215 z-0"></div>
+  <div
+    class="relative h-[calc(100vh-16px)] bg-(--color-chinese-black) overflow-hidden"
+  >
+    <div
+      class="absolute -left-3/4 -top-[20vw] h-[50vh] gradient-base gradient-base-y gradient rotate-35 z-0"
+    ></div>
+    <div
+      class="absolute -right-3/4 -bottom-[20vw] h-[50vh] gradient-base gradient-base-y gradient rotate-215 z-0"
+    ></div>
     <UiTitle class="mb-20 z-10">Lobby {{ lobbyStore.code }}</UiTitle>
 
     <ol class="flex flex-col gap-4 list-decimal z-10">

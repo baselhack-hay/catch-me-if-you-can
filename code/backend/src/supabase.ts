@@ -90,6 +90,38 @@ export async function setRoleInLobby(
   return data;
 }
 
+export async function setUserAsReady(userId: string, lobbyId: string) {
+  const { data, error } = await supabase
+    .from("lobby_users")
+    .update({ is_ready: true })
+    .eq("user_id", userId)
+    .eq("lobby_id", lobbyId)
+    .select();
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
+  return data;
+}
+
+export async function allPlayersReady(lobbyId: string) {
+  const { data, error } = await supabase
+    .from("lobby_users")
+    .select("id")
+    .eq("lobby_id", lobbyId)
+    .eq("is_ready", false)
+    .select();
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
+  return data.length === 0;
+}
+
 export async function setGeolocation(userId: string, geo: GeoLocation) {
   const { data, error } = await supabase
     .from("users")

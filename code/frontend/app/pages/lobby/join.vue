@@ -11,6 +11,7 @@ async function onJoinLobby(): Promise<void> {
     }
   } catch (e) {
     // TODO: show snackbar that lobby join failed
+    console.log(e);
   }
 }
 </script>

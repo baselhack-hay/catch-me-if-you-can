@@ -4,6 +4,7 @@ import { handleLeave } from "./leave";
 import { handleStart } from "./start";
 import { handleRole } from "./role";
 import { handleGeolocation } from "./geolocation";
+import { handleReady } from "./ready";
 
 // Matches: lobby/{code}/{action}
 const LOBBY_REGEX = /^lobby\/([^/]+)\/([^/]+)$/;
@@ -45,6 +46,10 @@ export const registerLobbyRouter = (broker: Aedes) => {
 
       case "geo":
         handleGeolocation(lobbyCode, client, payload);
+        break;
+
+      case "ready":
+        handleReady(lobbyCode, client, payload);
         break;
 
       default:

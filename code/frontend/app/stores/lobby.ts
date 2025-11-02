@@ -79,6 +79,15 @@ export const useLobbyStore = defineStore("lobbyStore", {
       return Promise.resolve(true);
     },
 
+    setReady(): void {
+      this.client?.publish(
+        TOPICS.LOBBY.READY(this.code),
+        JSON.stringify({
+          message: "Player ready",
+        })
+      );
+    },
+
     async handleJoinEvent(user: LobbyUser): Promise<void> {
       console.log("handle join event: ", user);
     },
@@ -99,6 +108,23 @@ export const useLobbyStore = defineStore("lobbyStore", {
       console.log("current role", role);
 
       navigateTo(`/assign-role?role=${role}`);
+    },
+
+    handlePlayGameEvent(): void {
+      console.log("handle started event... navigating to assign role");
+      const clientId = getPersistentClientId();
+      console.log("clientId", clientId);
+      const user = this.users.find((u) => u.id === clientId);
+
+      console.log("current user", user);
+      const role = user?.roleId === this.uuids.hunter ? "hunter" : "bunny";
+      console.log("current role", role);
+
+      if (role === "hunter") {
+        navigateTo(`/countdown`);
+      } else {
+        navigateTo(`/game`);
+      }
     },
 
     async leaveLobby(): Promise<void> {

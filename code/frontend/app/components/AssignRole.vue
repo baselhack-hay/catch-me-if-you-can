@@ -71,6 +71,7 @@
 <script setup lang="ts">
 import { Button } from "./ui/button";
 import { ref } from "vue";
+const lobbyStore = useLobbyStore();
 
 interface Props {
   variant: "hunter" | "bunny";
@@ -86,8 +87,8 @@ const isReady = ref(false);
 
 const confirmReady = () => {
   // TODO – Wait for other players to be ready
-  // isReady.value = true;
-  navigateTo(`/game`);
+  isReady.value = true;
+  lobbyStore.setReady();
 };
 </script>
 

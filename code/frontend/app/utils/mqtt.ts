@@ -37,6 +37,9 @@ export function joinChannel(
               case "started":
                 lobbyStore.handleStartedEvent();
                 break;
+              case "play-game":
+                lobbyStore.handlePlayGameEvent();
+                break;
               case "geo-request":
                 lobbyStore.sendGeolocation();
                 break;
