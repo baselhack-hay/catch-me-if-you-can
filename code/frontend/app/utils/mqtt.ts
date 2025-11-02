@@ -1,5 +1,6 @@
-import mqtt from "mqtt";
+import type mqtt from "mqtt";
 import type { LobbyUser } from "types/lobby";
+import type { Catch } from "types/Catch";
 import { TOPICS } from "types/topics";
 import { getMqttClient } from "./mqttClient";
 
@@ -42,6 +43,11 @@ export function joinChannel(
                 break;
               case "geo-request":
                 lobbyStore.sendGeolocation();
+                break;
+              case "ask-client-catch":
+                lobbyStore.handleAskCatched(
+                  JSON.parse(payload.toString()) as unknown as Catch[]
+                );
                 break;
               default:
                 break;

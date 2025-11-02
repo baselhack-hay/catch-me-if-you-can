@@ -6,7 +6,7 @@ const lobbyIntervals = new Map();
 export function startLobbyInterval(
   lobbyCode: string,
   fn: () => Promise<void>,
-  ms = 5_000
+  ms = 10_000
 ) {
   // prevent duplicates
   if (lobbyIntervals.has(lobbyCode)) return;

@@ -1,5 +1,6 @@
 import type { MqttClient } from "mqtt";
 import type { LobbyUser } from "types/lobby";
+import type { Catch } from "types/catch";
 import { TOPICS } from "types/topics";
 import { getLobbyById, postLobby } from "~/utils/lobby";
 
@@ -14,20 +15,21 @@ export type LobbyStore = {
     hunter: string;
     bunny: string;
   };
+  caughtPlayerCheck: boolean;
 };
 
 export const useLobbyStore = defineStore("lobbyStore", {
   state: () =>
-  ({
-    code: "",
-    nickname: "",
-    client: null,
-    users: [],
-    uuids: {
-      hunter: "08182765-80e1-45fd-ac2f-201986b30de1",
-      bunny: "37ee07b1-1cf8-4efb-aa42-ca03d2681cf8",
-    },
-  } as LobbyStore),
+    ({
+      code: "",
+      nickname: "",
+      client: null,
+      users: [],
+      uuids: {
+        hunter: "08182765-80e1-45fd-ac2f-201986b30de1",
+        bunny: "37ee07b1-1cf8-4efb-aa42-ca03d2681cf8",
+      },
+    } as LobbyStore),
   actions: {
     async createLobby(lobbyname: string, nickname: string): Promise<void> {
       const result = await postLobby({
@@ -88,6 +90,26 @@ export const useLobbyStore = defineStore("lobbyStore", {
       );
     },
 
+    triggerCatch(bunnyId: string, bunnyName: string): void {
+      console.log("trigger catch!");
+      const clientId = getPersistentClientId();
+      const user = this.users.find((u) => u.id === clientId);
+      if (!user) return;
+
+      const payload: Catch = {
+        hunterId: user.id,
+        hunterName: user.username,
+        bunnyId,
+        bunnyName,
+      };
+      console.log("payload", payload);
+
+      this.client?.publish(
+        TOPICS.LOBBY.TRIGGER_CATCH(this.code),
+        JSON.stringify(payload)
+      );
+    },
+
     async handleJoinEvent(user: LobbyUser): Promise<void> {
       console.log("handle join event: ", user);
     },
@@ -95,6 +117,17 @@ export const useLobbyStore = defineStore("lobbyStore", {
     async handleUsersEvent(users: LobbyUser[]): Promise<void> {
       console.log("handle users event: ", users);
       this.users = users;
+    },
+
+    async handleAskCatched(payload: Catch): Promise<void> {
+      console.log("ask catched", payload);
+      // console.log("handle users event: ", users);
+      // this.users = users;
+      const clientId = getPersistentClientId();
+      const user = this.users.find((u) => u.id === clientId);
+      if (user?.id === payload.bunnyId) {
+        this.caughtPlayerCheck = true;
+      }
     },
 
     async handleStartedEvent(): Promise<void> {
@@ -173,15 +206,13 @@ export const useLobbyStore = defineStore("lobbyStore", {
       const hunter: LobbyUser = {
         id: "",
         username: "",
-        roleId: null
-      } // await ...
+        roleId: null,
+      }; // await ...
 
-      return Promise.resolve(hunter)
+      return Promise.resolve(hunter);
     },
 
-    confirmOrDenyCatch(bunny: LobbyUser, confirm: boolean) {
-
-    },
+    confirmOrDenyCatch(bunny: LobbyUser, confirm: boolean) {},
 
     async handleError(message: string): Promise<void> {
       console.error("Lobby error:", message);

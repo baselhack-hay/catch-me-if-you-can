@@ -1,8 +1,4 @@
-import {
-  type GetLobbyByIdResponse,
-  type LobbySettings,
-  type Lobby,
-} from "types/lobby";
+import type { GetLobbyByIdResponse, LobbySettings, Lobby } from "types/lobby";
 
 export async function postLobby(settings: LobbySettings): Promise<Lobby> {
   const config = useRuntimeConfig();
@@ -21,7 +17,7 @@ export async function postLobby(settings: LobbySettings): Promise<Lobby> {
 export async function getLobbyById(id: string): Promise<GetLobbyByIdResponse> {
   const config = useRuntimeConfig();
   const response = await $fetch<GetLobbyByIdResponse>(
-    `${config.public.apiUrl}/lobby/${id}`,
+    `${config.public.apiUrl}/lobby/${id}`
   );
 
   if (response) {

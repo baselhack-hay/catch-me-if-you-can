@@ -5,6 +5,8 @@ import { handleStart } from "./start";
 import { handleRole } from "./role";
 import { handleGeolocation } from "./geolocation";
 import { handleReady } from "./ready";
+import { handleConfirmCatch } from "./confirmCatch";
+import { handleTriggerCatch } from "./triggerCatch";
 
 // Matches: lobby/{code}/{action}
 const LOBBY_REGEX = /^lobby\/([^/]+)\/([^/]+)$/;
@@ -50,6 +52,14 @@ export const registerLobbyRouter = (broker: Aedes) => {
 
       case "ready":
         handleReady(lobbyCode, client, payload);
+        break;
+
+      case "trigger-catch":
+        handleTriggerCatch(lobbyCode, client, payload);
+        break;
+
+      case "confirm-catch":
+        handleConfirmCatch(lobbyCode, client, payload);
         break;
 
       default:
