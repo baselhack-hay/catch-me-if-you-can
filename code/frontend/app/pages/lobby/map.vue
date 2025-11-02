@@ -291,7 +291,7 @@ onBeforeUnmount(() => {
 
     </ui-dialog-content>
   </ui-dialog>
-  <div class="relative w-full h-[100vh]">
+  <div class="relative w-full h-[calc(100vh-16px)]">
     <!-- Fehleranzeige -->
     <transition name="fade">
       <div
