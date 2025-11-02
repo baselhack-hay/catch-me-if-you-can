@@ -12,6 +12,10 @@ onMounted(async () => {
   const userRes = await $fetch("/api/location");
   userLocations.value = Array.isArray(userRes) ? userRes : [];
 });
+
+const copyToClipboard = async (text) => {
+  await navigator.clipboard.writeText(text)
+}
 </script>
 
 <template>
@@ -30,16 +34,12 @@ onMounted(async () => {
 
     <h2>Verfügbare Lobbies</h2>
       <ul>
-        <li 
-          v-for="location in userLocations" 
-          :key="location.id"
-          :class="!location.geolocation ? 'opacity-50 text-gray-400' : ''"
-        >
-        <span v-if="location.geolocation">
-          {{ location.id }} + {{ location.username }} - {{ location.geolocation }}
-          </span>
-
-        </li>
-      </ul>
+      <li
+        v-for="lobby in lobbies" :key="lobby.id" 
+        @click="copyToClipboard(lobby.id)"
+        class="cursor-pointer">
+        {{ lobby.id }}
+      </li>
+    </ul>
   </div>
 </template>
