@@ -18,16 +18,16 @@ export type LobbyStore = {
 
 export const useLobbyStore = defineStore("lobbyStore", {
   state: () =>
-    ({
-      code: "",
-      nickname: "",
-      client: null,
-      users: [],
-      uuids: {
-        hunter: "08182765-80e1-45fd-ac2f-201986b30de1",
-        bunny: "37ee07b1-1cf8-4efb-aa42-ca03d2681cf8",
-      },
-    } as LobbyStore),
+  ({
+    code: "",
+    nickname: "",
+    client: null,
+    users: [],
+    uuids: {
+      hunter: "08182765-80e1-45fd-ac2f-201986b30de1",
+      bunny: "37ee07b1-1cf8-4efb-aa42-ca03d2681cf8",
+    },
+  } as LobbyStore),
   actions: {
     async createLobby(lobbyname: string, nickname: string): Promise<void> {
       const result = await postLobby({
@@ -159,6 +159,30 @@ export const useLobbyStore = defineStore("lobbyStore", {
         (err) => console.warn("Geolocation-Fehler:", err)
       );
     },
+
+    async catchPlayer(hunter: LobbyUser, bunny: LobbyUser): Promise<boolean> {
+      try {
+        const bunnyAccepted: boolean = false; // await ...
+        return Promise.resolve(bunnyAccepted);
+      } catch (e) {
+        return Promise.reject(e);
+      }
+    },
+
+    async onCaughtListener(bunnyName: string): Promise<LobbyUser> {
+      const hunter: LobbyUser = {
+        id: "",
+        username: "",
+        roleId: null
+      } // await ...
+
+      return Promise.resolve(hunter)
+    },
+
+    confirmOrDenyCatch(bunny: LobbyUser, confirm: boolean) {
+
+    },
+
     async handleError(message: string): Promise<void> {
       console.error("Lobby error:", message);
     },

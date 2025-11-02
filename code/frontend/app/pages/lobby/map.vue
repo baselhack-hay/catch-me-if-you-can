@@ -12,16 +12,20 @@ const selectedPlayer = ref<LobbyUser | null>(null);
 const showGeoError = ref(false);
 const userMarkers = new Map<string, L.Marker>();
 const lobbyStore = useLobbyStore();
-const currentPlayer = computed(() =>
-  lobbyStore.users.find((p) => p.username === lobbyStore.nickname)
-);
+const currentPlayer = lobbyStore.users.find((p) => p.username === lobbyStore.nickname) as LobbyUser;
+
 
 let selfMarker: L.Marker | null = null;
 let geoInterval: ReturnType<typeof setInterval> | null = null;
 let userUpdateInterval: ReturnType<typeof setInterval> | null = null;
 let firstUpdate = true;
 
-const catchPlayer = () => {
+const catchPlayer = async () => {
+  if (selectedPlayer.value == null) return;
+  const caught = await lobbyStore.catchPlayer(currentPlayer, selectedPlayer.value)
+  if (caught) {
+    // TODO: Show caught animation
+  }
   selectedPlayer.value = null;
   dialogOpen.value = false;
 }
@@ -30,6 +34,8 @@ const confirmCatch = () => {
   // TODO: Call ans Backend, dass Spieler gefangen wurde
   // Aktueller spieler in Variable `currentPlayer`
   // Hunter in variable `confirmCatchHunter`
+
+  lobbyStore.confirmOrDenyCatch(currentPlayer, true)
   confirmCatchDialogOpen.value = false;
 }
 
@@ -38,12 +44,27 @@ const denyCatch = () => {
   // Aktueller spieler in Variable `currentPlayer`
   // Hunter in variable `confirmCatchHunter`
 
+  lobbyStore.confirmOrDenyCatch(currentPlayer, false)
   confirmCatchHunter.value = null;
   confirmCatchDialogOpen.value = false;
+  registerOnCaughtListener();
+}
+
+const registerOnCaughtListener = () => {
+if (currentPlayer.roleId == lobbyStore.uuids.bunny) {
+    lobbyStore.onCaughtListener(currentPlayer.username)
+      .then(hunter => {
+        confirmCatchHunter.value = hunter;
+        confirmCatchDialogOpen.value = true;
+      })
+      .catch(registerOnCaughtListener);
+  }
 }
 
 onMounted(async () => {
   await nextTick();
+
+  registerOnCaughtListener();
 
   const fallback: [number, number] = [47.5596, 7.5886];
   map.value = L.map("map").setView(fallback, 13);
@@ -123,7 +144,7 @@ function updateUserMarkers(users: LobbyUser[]) {
     if (!marker) {
       marker = L.marker(pos, { icon }).addTo(map.value as L.Map);
       marker.on("click", () => {
-        if (currentPlayer.value?.roleId !== lobbyStore.uuids.hunter) return;
+        if (currentPlayer.roleId !== lobbyStore.uuids.hunter) return;
         if (user.roleId === lobbyStore.uuids.hunter) return;
         selectedPlayer.value = user;
         dialogOpen.value = true;
