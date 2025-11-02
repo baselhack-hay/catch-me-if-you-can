@@ -3,21 +3,23 @@ import { ref, onMounted, onBeforeUnmount, nextTick, computed } from "vue";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { LobbyUser } from "types/lobby";
+
 const map = ref<L.Map | null>(null);
 const dialogOpen = ref(false);
 const confirmCatchDialogOpen = ref<boolean>(false);
 const confirmCatchHunter = ref<LobbyUser | null>(null);
 const selectedPlayer = ref<LobbyUser | null>(null);
 const showGeoError = ref(false);
-let selfMarker: L.Marker | null = null;
 const userMarkers = new Map<string, L.Marker>();
-let geoInterval: ReturnType<typeof setInterval> | null = null;
-let userUpdateInterval: ReturnType<typeof setInterval> | null = null;
-let firstUpdate = true;
 const lobbyStore = useLobbyStore();
 const currentPlayer = computed(() =>
   lobbyStore.users.find((p) => p.username === lobbyStore.nickname)
 );
+
+let selfMarker: L.Marker | null = null;
+let geoInterval: ReturnType<typeof setInterval> | null = null;
+let userUpdateInterval: ReturnType<typeof setInterval> | null = null;
+let firstUpdate = true;
 
 const catchPlayer = () => {
   selectedPlayer.value = null;
