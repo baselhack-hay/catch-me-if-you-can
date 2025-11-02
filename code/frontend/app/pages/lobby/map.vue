@@ -99,7 +99,7 @@ function updateUserMarkers(users: LobbyUser[]) {
     if (user.username === lobbyStore.nickname) return;
 
     seen.add(user.id);
-    const pos: [number, number] = randomOffsetMeters(user.geo.latitude, user.geo.longitude, 40);
+    const pos: [number, number] = randomOffsetMeters(user.geo.latitude, user.geo.longitude, 1000);
     const icon = getIconForRole(user.roleId);
 
     let marker = userMarkers.get(user.id);
