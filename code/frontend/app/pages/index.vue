@@ -3,14 +3,17 @@ import { ref, onMounted } from "vue";
 import DialogTrigger from "~/components/ui/dialog/DialogTrigger.vue";
 
 const lobbies = ref([]);
-const userLocations = ref([]);
 
 onMounted(async () => {
   const res = await $fetch("/api/lobby");
   lobbies.value = Array.isArray(res) ? res : [];
 
-  const userRes = await $fetch("/api/location");
-  userLocations.value = Array.isArray(userRes) ? userRes : [];
+    if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      () => {},
+      () => {}
+    );
+  }
 });
 
 const copyToClipboard = async (text) => {
