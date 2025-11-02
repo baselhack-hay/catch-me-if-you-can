@@ -226,7 +226,6 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  filter: drop-shadow(2px 2px 1px var(--color-cookies-and-cream)) drop-shadow(2px -2px 1px var(--color-cookies-and-cream)) drop-shadow(-2px 2px 1px var(--color-cookies-and-cream)) drop-shadow(-2px -2px 1px var(--color-cookies-and-cream));
 }
 .marker-self .triangle {
   width: 0;
