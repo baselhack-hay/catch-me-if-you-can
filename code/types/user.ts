@@ -1,5 +1,8 @@
+import type { GeoLocation } from './geoLocation';
+
 export type User = {
   id: number;
   username: string;
-  points: number;
+  location?: GeoLocation;
+  points?: number;
 };
