@@ -36,8 +36,8 @@ const copyToClipboard = async (text) => {
     >
 
     <div class="z-10 mt-12">
-        <h2 class="text-center mb-6 text-xl text-(--color-cookies-and-cream)">Verfügbare Lobbies</h2>
-        <div class="flex flex-wrap gap-3 justify-center h-80 overflow-scroll">
+        <h2 class="text-center mb-6 text-xl text-(--color-cookies-and-cream)">Available Lobbies</h2>
+        <div class="flex flex-wrap gap-3 justify-center h-80 overflow-x-scroll">
         <div
           v-for="lobby in lobbies" :key="lobby.id"
           @click="copyToClipboard(lobby.id)"
