@@ -3,43 +3,32 @@ import { ref, onMounted, onBeforeUnmount, nextTick, computed } from "vue";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { LobbyUser } from "types/lobby";
-
-// 🌍 MAP + STATE
 const map = ref<L.Map | null>(null);
 const dialogOpen = ref(false);
 const confirmCatchDialogOpen = ref<boolean>(false);
 const confirmCatchHunter = ref<LobbyUser | null>(null);
 const selectedPlayer = ref<LobbyUser | null>(null);
 const showGeoError = ref(false);
-
-// 🧭 MARKER STATES
 let selfMarker: L.Marker | null = null;
 const userMarkers = new Map<string, L.Marker>();
-
-// 🕓 INTERVALS
 let geoInterval: ReturnType<typeof setInterval> | null = null;
 let userUpdateInterval: ReturnType<typeof setInterval> | null = null;
 let firstUpdate = true;
-
-// 🧩 LOBBY STORE
 const lobbyStore = useLobbyStore();
 const currentPlayer = computed(() =>
   lobbyStore.users.find((p) => p.username === lobbyStore.nickname)
 );
 
-// 🎯 "Catch" Dialog schließen
 const catchPlayer = () => {
   selectedPlayer.value = null;
   dialogOpen.value = false;
 }
-// ✅ Setup
 onMounted(async () => {
   await nextTick();
 
   const fallback: [number, number] = [47.5596, 7.5886];
   map.value = L.map("map").setView(fallback, 13);
 
-  // 🌙 Dark Layer
   L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
     attribution:
       '&copy; <a href="https://carto.com/attributions">CARTO</a> | © OpenStreetMap contributors',
@@ -47,11 +36,9 @@ onMounted(async () => {
     maxZoom: 19,
   }).addTo(map.value as L.Map);
 
-  // 📍 Eigene Position aktualisieren
   await updatePosition();
   geoInterval = setInterval(updatePosition, 5000);
 
-  // 👥 Gegner alle 10 Sekunden aktualisieren
   updateUserMarkers(lobbyStore.users);
   userUpdateInterval = setInterval(() => {
     updateUserMarkers(lobbyStore.users);
@@ -66,16 +53,12 @@ async function updatePosition(): Promise<void> {
   }
 
   navigator.geolocation.getCurrentPosition(
-    (pos) => {
+    ({ coords: { latitude, longitude } }) => {
       if (!map.value) return;
-
-      const { latitude, longitude } = pos.coords;
       const position: [number, number] = [latitude, longitude];
-
       showGeoError.value = false;
 
       const myIcon = getIconForRole("self");
-
       if (!selfMarker) {
         selfMarker = L.marker(position, { icon: myIcon }).addTo(map.value as L.Map);
       } else {
@@ -87,15 +70,13 @@ async function updatePosition(): Promise<void> {
         firstUpdate = false;
       }
     },
-    (err) => {
-      console.warn("⚠️ Geolocation konnte nicht abgerufen werden:", err);
+    () => {
       showGeoError.value = true;
     },
     { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
   );
 }
 
-// 🔀 Zufällige leichte Abweichung (40 m)
 function randomOffsetMeters(lat: number, lon: number, radiusMeters = 300): [number, number] {
   const r = radiusMeters / 111300;
   const u = Math.random();
@@ -107,23 +88,21 @@ function randomOffsetMeters(lat: number, lon: number, radiusMeters = 300): [numb
   return [newLat, newLon];
 }
 
-// 👥 Marker aktualisieren
 function updateUserMarkers(users: LobbyUser[]) {
   if (!map.value) return;
   const seen = new Set<string>();
 
-  for (const user of users) {
-    if (!user.geo?.latitude || !user.geo?.longitude) continue;
-    if (user.username === lobbyStore.nickname) continue;
+  users.forEach(user => {
+    if (!user.geo?.latitude || !user.geo?.longitude) return;
+    if (user.username === lobbyStore.nickname) return;
 
-    const [lat, lon] = randomOffsetMeters(user.geo.latitude, user.geo.longitude, 40);
-    const pos: [number, number] = [lat, lon];
-    const icon = getIconForRole(user.roleId);
     seen.add(user.id);
+    const pos: [number, number] = randomOffsetMeters(user.geo.latitude, user.geo.longitude, 40);
+    const icon = getIconForRole(user.roleId);
 
-    const existing = userMarkers.get(user.id);
-    if (!existing) {
-      const marker = L.marker(pos, { icon }).addTo(map.value as L.Map);
+    let marker = userMarkers.get(user.id);
+    if (!marker) {
+      marker = L.marker(pos, { icon }).addTo(map.value as L.Map);
       marker.on("click", () => {
         if (currentPlayer.value?.roleId !== lobbyStore.uuids.hunter) return;
         if (user.roleId === lobbyStore.uuids.hunter) return;
@@ -132,32 +111,24 @@ function updateUserMarkers(users: LobbyUser[]) {
       });
       userMarkers.set(user.id, marker);
     } else {
-      existing.setLatLng(pos);
-      const existingHtml =
-        existing.getIcon() instanceof L.DivIcon
-          ? (existing.getIcon().options as L.DivIconOptions).html
-          : null;
-      if (existingHtml !== icon.options.html) {
-        existing.setIcon(icon);
-      }
+      marker.setLatLng(pos);
+      marker.setIcon(icon);
     }
-  }
+  });
 
-  // 🧹 Entferne alte Marker
-  for (const [id, marker] of userMarkers.entries()) {
+  [...userMarkers.entries()].forEach(([id, marker]) => {
     if (!seen.has(id)) {
       marker.remove();
       userMarkers.delete(id);
     }
-  }
+  });
 }
 
-// 🎨 Marker-Design
 function getIconForRole(role: string): L.DivIcon {
   const colors: Record<string, string> = {
-    "08182765-80e1-45fd-ac2f-201986b30de1": "#ef4444", // 🔴 Hunter
-    "37ee07b1-1cf8-4efb-aa42-ca03d2681cf8": "#22c55e", // 🟢 Bunny
-    self: "#8B5CF6", // 🟣 Selbst
+    "08182765-80e1-45fd-ac2f-201986b30de1": "#ef4444", 
+    "37ee07b1-1cf8-4efb-aa42-ca03d2681cf8": "#22c55e", 
+    self: "#8B5CF6", 
   };
   const color = colors[role] || "#8B5CF6";
 
@@ -181,7 +152,6 @@ function getIconForRole(role: string): L.DivIcon {
   });
 }
 
-// 🧹 Cleanup
 onBeforeUnmount(() => {
   if (geoInterval) clearInterval(geoInterval);
   if (userUpdateInterval) clearInterval(userUpdateInterval);
