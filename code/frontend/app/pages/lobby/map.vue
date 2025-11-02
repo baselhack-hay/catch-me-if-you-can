@@ -238,7 +238,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <ui-dialog :open="true">
+  <ui-dialog :open="dialogOpen">
     <ui-dialog-content>
       <ui-dialog-header>
         <ui-dialog-title>
