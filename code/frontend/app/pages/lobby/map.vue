@@ -198,7 +198,7 @@ onBeforeUnmount(() => {
     <ui-dialog-content>
       <ui-dialog-header>
         <ui-dialog-title>
-          Catch <span class="text-(--color-electric-red)">
+          Catch <span class="text-(--color-avocado)">
             {{ selectedPlayer?.username }}
           </span>?
         </ui-dialog-title>
@@ -232,7 +232,7 @@ onBeforeUnmount(() => {
         v-if="showGeoError"
         class="absolute top-4 left-1/2 -translate-x-1/2 bg-red-600 text-white px-4 py-2 rounded-xl shadow-lg z-[10000]"
       >
-        ❌ Standort konnte nicht abgerufen werden.
+        ❌ Location could not be retrieved. Please allow access to your location.
       </div>
     </transition>
     <div id="map" class="w-full h-full" />
@@ -254,7 +254,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  filter: drop-shadow(0 0 8px var(--marker-color, #8B5CF6));
+  filter: drop-shadow(2px 2px 1px var(--color-cookies-and-cream)) drop-shadow(2px -2px 1px var(--color-cookies-and-cream)) drop-shadow(-2px 2px 1px var(--color-cookies-and-cream)) drop-shadow(-2px -2px 1px var(--color-cookies-and-cream));
 }
 .marker-self .triangle {
   width: 0;
@@ -270,7 +270,7 @@ onBeforeUnmount(() => {
   height: 20px;
   border-radius: 50%;
   background: var(--marker-color, #ef4444);
-  border: 2px solid white;
+  border: 2px solid var(--color-cookies-and-cream);
   box-shadow: 0 0 10px var(--marker-color, #ef4444);
   animation: markerPulse 1.6s ease-in-out infinite;
 }

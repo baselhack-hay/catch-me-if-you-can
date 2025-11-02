@@ -26,7 +26,7 @@ async function onLeaveGame(): Promise<void> {
     ></div>
     <UiTitle class="mb-20 z-10">Lobby {{ lobbyStore.code }}</UiTitle>
 
-    <ol class="flex flex-col gap-4 list-decimal z-10">
+    <ol class="flex flex-col gap-4 list-decimal z-10 text-(--color-cookies-and-cream) text-3xl">
       <User
         v-for="(user, index) in lobbyStore.users"
         :key="user.id ?? index"
