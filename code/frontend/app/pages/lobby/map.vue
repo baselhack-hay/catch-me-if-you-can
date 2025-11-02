@@ -25,6 +25,23 @@ const catchPlayer = () => {
   selectedPlayer.value = null;
   dialogOpen.value = false;
 }
+
+const confirmCatch = () => {
+  // TODO: Call ans Backend, dass Spieler gefangen wurde
+  // Aktueller spieler in Variable `currentPlayer`
+  // Hunter in variable `confirmCatchHunter`
+  confirmCatchDialogOpen.value = false;
+}
+
+const denyCatch = () => {
+  // TODO: Call ans Backend, dass Spieler ablehnt, gefangen worden zu sein
+  // Aktueller spieler in Variable `currentPlayer`
+  // Hunter in variable `confirmCatchHunter`
+
+  confirmCatchHunter.value = null;
+  confirmCatchDialogOpen.value = false;
+}
+
 onMounted(async () => {
   await nextTick();
 
