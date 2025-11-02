@@ -52,13 +52,25 @@
     </div>
 
     <div class="mb-5">
-      <Button @click="confirmReady()">Ready?</Button>
+      <Button v-if="isReady === false" @click="confirmReady()">Ready?</Button>
+      <div v-else>
+        <UiTitle
+          v-if="props.variant === 'hunter'"
+          class="text-1xl text-(--color-chinese-black)"
+        >
+          Waiting for other players...
+        </UiTitle>
+        <UiTitle v-if="props.variant === 'bunny'" class="text-1xl">
+          Waiting for other players...
+        </UiTitle>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { Button } from "./ui/button";
+import { ref } from "vue";
 
 interface Props {
   variant: "hunter" | "bunny";
@@ -70,7 +82,11 @@ const variantLabel = computed(() =>
   props.variant === "hunter" ? "hunter" : "bunny"
 );
 
+const isReady = ref(false);
+
 const confirmReady = () => {
+  // TODO – Wait for other players to be ready
+  // isReady.value = true;
   navigateTo(`/game`);
 };
 </script>
